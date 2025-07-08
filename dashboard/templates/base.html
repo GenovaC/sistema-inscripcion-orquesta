@@ -1,0 +1,87 @@
+{% load tailwind_tags %}
+{% load static %} 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}El Sistema - Ciudad Guayana{% endblock %}</title>
+    {% tailwind_css %} 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'dashboard/css/base.css' %}">
+   
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="flex min-h-screen">
+    {# Sidebar lateral izquierdo #}
+    <aside class="w-64 bg-white/70 shadow-lg p-6 flex flex-col justify-between sticky top-0 h-screen">
+        <div>
+            <div class="flex items-center mb-10">
+                <img src="{% static 'dashboard/img/Logo El Sistema.png' %}" alt="El Sistema Logo" class="h-12 mr-3"> 
+            </div>
+            <nav>
+                <ul>
+                    <li class="mb-4">
+                        <a href="{% url 'dashboard:home' %}" class="flex items-center text-gray-700 hover:text-pink-600 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition duration-200">
+                            <i class="fas fa-user-plus mr-3"></i> {# Icono de Font Awesome #}
+                            Home
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="{% url 'accounts:profile' %}" class="flex items-center text-gray-700 hover:text-pink-600 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition duration-200">
+                            <i class="fas fa-edit mr-3"></i>
+                            Actualización de Datos
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="{% url 'students:new' %}" class="flex items-center text-gray-700 hover:text-pink-600 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition duration-200">
+                            <i class="fas fa-users mr-3"></i>
+                            Nueva inscripción
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="{% url 'instruments:list' %}" class="flex items-center text-gray-700 hover:text-pink-600 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition duration-200">
+                            <i class="fas fa-project-diagram mr-3"></i>
+                            Cátedras
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="{% url 'orchestral_projects:list' %}" class="flex items-center text-gray-700 hover:text-pink-600 font-semibold py-2 px-4 rounded-lg hover:bg-gray-100 transition duration-200">
+                            <i class="fas fa-guitar mr-3"></i>
+                            Proyectos
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        {# Parte inferior del sidebar, si es necesario #}
+        <div>
+            {# Puedes añadir aquí un pie de página o enlaces adicionales del sidebar #}
+        </div>
+    </aside>
+
+    <main class="flex-1 p-10 bg-transparent">
+        {# Nuevo contenedor para limitar el ancho y centrar el contenido #}
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8"> 
+            <header class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">{% block current_page %}X{% endblock %}</h1>
+                <a href="{% url 'accounts:logout' %}" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
+                    CERRAR SESIÓN
+                </a>
+            </header>
+
+            {% block content %}
+            {# Este bloque será el contenido específico de cada página #}
+            {% endblock %}
+        </div>
+    </main>
+
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Base de datos local
+db.sqlite3
+
+# Archivos de medios y estáticos (si los gestionas localmente)
+media/
+static/
+
+# Variables de entorno (si usas un archivo .env)
+.env
+
+# Archivos de log
+*.log
+
+# Configuraciones locales (si tienes un archivo settings_local.py, por ejemplo)
+local_settings.py
+
+# Archivos del sistema operativo
+.DS_Store
+.idea/ # Para usuarios de PyCharm
+*.swp # Para usuarios de Vim
