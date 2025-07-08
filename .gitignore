@@ -7,6 +7,7 @@ static/
 
 # Variables de entorno (si usas un archivo .env)
 .env
+venv/ # Tu entorno virtual de Python
 
 # Archivos de log
 *.log
@@ -18,3 +19,21 @@ local_settings.py
 .DS_Store
 .idea/ # Para usuarios de PyCharm
 *.swp # Para usuarios de Vim
+
+# Python
+*.pyc
+__pycache__/
+.pytest_cache/
+.coverage
+/htmlcov/
+*.egg-info/
+
+# Node.js
+/theme/node_modules/ # <-- ¡Asegúrate de incluir esta línea!
+npm-debug.log
+yarn-debug.log
+.pnp.*
+
+# IDEs
+.idea/ # Para PyCharm
+.vscode/ # Para VS Code
