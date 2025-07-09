@@ -13,7 +13,7 @@
 ### 4. Activar entorno virtual
 
 ### 5. Instalar dependencias de python
-Dentro del directorio raíz del proyecto
+Dentro del directorio raíz del proyecto:
 
 `pip install -r requirements.txt`
 
@@ -24,6 +24,8 @@ Dentro del directorio raíz del proyecto
 Si el comando falla, verificar el `NPM_BIN_PATH` en el archivo `settings.py` del proyecto, también asegurarse de que Node.js esté en el PATH del sistema.
 
 **NOTA:** Con django-tailwind, las dependencias de Node.js para Tailwind CSS se instalan dentro de la carpeta `theme`.
+
+**EXTRA:** Documentación oficial sobre la instalación de django-tailwind: https://django-tailwind.readthedocs.io/en/latest/installation.html
 
 ### 7. Ejecutar migraciones de BBDD
 
@@ -44,6 +46,8 @@ Compilará automáticamente el CSS de Tailwind al hacer cambios en las plantilla
 - Terminal 2 (para el servidor de desarrollo de Django):
 
 `python manage.py runserver`
+
+Ambas deben ejecutarse con el entorno virtual activo, desde el directorio raíz del proyecto.
 
 ### 9. Abrir el Login
 
