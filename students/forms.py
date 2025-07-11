@@ -108,17 +108,17 @@ class StudentForm(forms.ModelForm):
             today = timezone.now().date()
             min_born_date = today - timezone.timedelta(days=5 * 365.25)
             if born_date > min_born_date:
-                raise ValidationError('El estudiante debe tener más de 5 años.')
+                raise ValidationError('El estudiante debe ser mayor de 5 años.')
         return born_date
 
     def clean_home_phone(self):
         home_phone = self.cleaned_data.get('home_phone')
         if home_phone and not re.fullmatch(r'^\d{11}$', home_phone):
-            raise ValidationError('El número de teléfono de casa debe ser una cadena de 11 dígitos numéricos.')
+            raise ValidationError('El número de teléfono de casa debe tener 11 dígitos.')
         return home_phone
 
     def clean_cellphone(self):
         cellphone = self.cleaned_data.get('cellphone')
         if cellphone and not re.fullmatch(r'^\d{11}$', cellphone):
-            raise ValidationError('El número de celular debe ser una cadena de 11 dígitos numéricos.')
+            raise ValidationError('El número de celular debe tener 11 dígitos.')
         return cellphone
