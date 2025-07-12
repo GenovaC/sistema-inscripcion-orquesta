@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .forms import StudentForm
 from .models import Student
+from datetime import date
 
 @login_required
 def create(request):
@@ -34,4 +35,12 @@ def list(request):
 @login_required
 def detail(request, id):
     student = get_object_or_404(Student, id=id)
+
+    # Calcular la edad
+    today = date.today()
+    born = student.born_date
+    age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    
+    student.calculated_age = age
+
     return render(request, 'students/student_detail.html', {'student': student}) 
