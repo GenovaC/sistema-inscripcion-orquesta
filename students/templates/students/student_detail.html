@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle Estudiante - El Sistema Guayana{% endblock %}
+{% block current_page %}Detalle de Estudiante{% endblock %}
+
+
+{% block content %}
+    <div class="max-w-4xl mx-auto bg-white/50 shadow-lg rounded-lg p-8 mt-4">
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
+            Detalle del Estudiante
+        </h2>
+
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Nombres:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.names }}</p>
+                </div>
+                
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Apellidos:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.lastnames }}</p>
+                </div>
+                
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.document_id }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.born_date|date:"d/m/Y" }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
+                    <p class="mt-1 text-sm text-gray-700">EDAD</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Género:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.get_gender_display }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Nacionalidad:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.get_nationality_display }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-full">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Dirección:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.address }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.home_phone }}</p>
+                </div>
+                <div class="sm:col-span-3">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.cellphone }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-full">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Correo Electrónico:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

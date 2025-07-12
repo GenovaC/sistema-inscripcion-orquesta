@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .forms import StudentForm
@@ -14,4 +14,24 @@ def create(request):
             return redirect(reverse('students:new')) 
     else:
         form = StudentForm()
-    return render(request, 'students/create_student.html', {'form': form})
+    return render(request, 'students/student_create.html', {'form': form})
+
+
+@login_required
+def list(request):
+    students = Student.objects.all()
+    all_students_count = Student.objects.count()
+    venezuelan_students_count = Student.objects.filter(nationality='V').count()
+    foreigners_students_count = all_students_count - venezuelan_students_count
+    
+    return render(request, 'students/student_list.html', {
+        'students': students,
+        'all_students': all_students_count,
+        'venezuelan_students': venezuelan_students_count,
+        'foreigners_students': foreigners_students_count
+    })
+
+@login_required
+def detail(request, id):
+    student = get_object_or_404(Student, id=id)
+    return render(request, 'students/student_detail.html', {'student': student}) 

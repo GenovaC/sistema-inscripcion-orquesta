@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Global - Estudiantes{% endblock %}
+{% block current_page %}Global - Estudiantes{% endblock %}
+
+{% block content %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white/60 p-6 rounded-lg shadow-md flex items-center">
+            <i class="fas fa-users text-pink-600 text-3xl mr-4"></i>
+            <div>
+                <h3 class="text-gray-500 text-sm font-medium">TOTAL INSCRITOS - GLOBAL</h3>
+                <p class="text-2xl font-bold text-gray-800">{{ all_students }} <span class="text-gray-500 text-sm ml-2"> ESTUDIANTES </span></p>
+                <p class="text-gray-500 text-xs">AÑO 2025</p>
+            </div>
+        </div>
+
+        <div class="bg-white/60 p-6 rounded-lg shadow-md flex items-center">
+            <i class="fas fa-user-astronaut text-pink-600 text-3xl mr-4"></i>
+            <div>
+                <h3 class="text-gray-500 text-sm font-medium">NACIONALIDAD VENEZOLANA</h3>
+                <p class="text-2xl font-bold text-gray-800">{{ venezuelan_students }}  <span class="text-gray-500 text-sm ml-2">ESTUDIANTES</span></p>
+                <p class="text-gray-500 text-xs">AÑO 2025</p>
+            </div>
+        </div>
+
+        
+        <div class="bg-white/60 p-6 rounded-lg shadow-md flex items-center">
+            <i class="fas fa-id-badge text-pink-600 text-3xl mr-4"></i>
+            <div>
+                <h3 class="text-gray-500 text-sm font-medium">INSCRITOS EXTRANJEROS</h3>
+                <p class="text-2xl font-bold text-gray-800">{{ foreigners_students }}  <span class="text-gray-500 text-sm ml-2">ESTUDIANTES</span></p>
+                <p class="text-gray-500 text-xs">AÑO 2025</p>
+            </div>
+        </div>
+    </div>
+
+    <h1>Listado de Estudiantes</h1>
+    {# Tabla de Estudiantes #}
+    {# Clases modificadas: bg-white/80 para la tabla #}
+    <div class="bg-white/60 p-6 rounded-lg shadow-md overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50/60"> {# También puedes hacer el thead semitransparente #}
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cédula</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellido</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Nacimiento</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono Celular</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white/60 divide-y divide-gray-200"> {# Y el tbody un poco menos opaco #}
+                {% for s in students %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{s.document_id}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm  text-gray-900">{{s.names}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{s.lastnames}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{s.born_date}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{s.cellphone}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{s.email}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">[Ver], [Editar], [Eliminar] </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="flex justify-center mt-4">
+            <a href="#" class="text-gray-500 hover:text-pink-600 text-3xl">
+                <i class="fa-regular fa-circle-up"></i>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
