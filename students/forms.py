@@ -19,8 +19,8 @@ class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = [
-             'document_id', 'nationality', 'names', 'lastnames', 'born_date',
-             'gender', 'address', 'home_phone', 'cellphone', 'email'
+            'document_id', 'nationality', 'names', 'lastnames', 'born_date',
+            'gender', 'address', 'home_phone', 'cellphone', 'email', 'academic_institution_name', 'academic_institution_address', 'academic_degree', 'academic_institution_type', 'housing_type', 'housing_condition', 'number_people_living_housing', 'allergies', 'regular_medical_treatment', 'medical_report'
         ]
         labels = {
             'document_id': 'Cédula/Pasaporte',
@@ -33,18 +33,38 @@ class StudentForm(forms.ModelForm):
             'home_phone': 'Teléfono de Casa',
             'cellphone': 'Celular',
             'email': 'Correo Electrónico',
+            'academic_institution_name': 'Nombre del plantel', 
+            'academic_institution_address': 'Dirección del plantel', 
+            'academic_degree': 'Grado/Año', 
+            'academic_institution_type': 'Tipo de plantel', 
+            'housing_type': 'Tipo de vivienda', 
+            'housing_condition': 'La vivienda es', 
+            'number_people_living_housing': 'N° de personas que viven en el hogar', 
+            'allergies': 'Alergias', 
+            'regular_medical_treatment': '¿Se somete a algún tratamiento médico regular?', 
+            'medical_report': '¿Presenta informe médico?',
         }
         help_texts = {
-            'document_id': 'Cédula del estudiante sin puntos ni espacios.',
-            'nationality': 'Venezolano (V) o Extranjero (E).',
-            'names':       'Máximo 30 caracteres.',
-            'lastnames':   'Máximo 30 caracteres.',
-            'born_date':   'Selecciona la fecha de nacimiento del estudiante.',
-            'gender':      'Selecciona Femenino o Masculino.',
-            'address':     'Dirección de residencia del estudiante.',
-            'home_phone':  'Número telefónico residencial.',
-            'cellphone':   'Número telefónico personal.',
-            'email':       'Correo electrónico del estudiante.',
+            'document_id':                  'Cédula del estudiante sin puntos ni espacios.',
+            'nationality':                  'Venezolano (V) o Extranjero (E).',
+            'names':                        'Máximo 30 caracteres.',
+            'lastnames':                    'Máximo 30 caracteres.',
+            'born_date':                    'Selecciona la fecha de nacimiento del estudiante.',
+            'gender':                       'Selecciona Femenino o Masculino.',
+            'address':                      'Dirección de residencia del estudiante.',
+            'home_phone':                   'Número telefónico residencial.',
+            'cellphone':                    'Número telefónico personal.',
+            'email':                        'Correo electrónico del estudiante.',
+            'academic_institution_name':    'Nombre del Plantel Educativo', 
+            'academic_institution_address': 'Dirección del Plantel Educativo.', 
+            'academic_degree':              'Grado académico', 
+            'academic_institution_type':    'Tipo de Plantel (Privado, Mixto, etc.)', 
+            'housing_type':                 'Tipo de Vivienda (Casa, Edificio, Apartamento, Quinta, etc.)', 
+            'housing_condition':            'Estado de la Vivienda (Propia, Alquilada, etc.)', 
+            'number_people_living_housing': 'Cantidad de personas que habitan en la Vivienda', 
+            'allergies':                    'Indique las alergias del estudiante. Dejar en blanco si no tiene o se desconocen.', 
+            'regular_medical_treatment':    'Indique si el estudiante toma tratamiento médico regular. Dejar en blanco en caso contrario.', 
+            'medical_report':               'Indique datos del informe médico del estudiante. Dejar en blanco en caso contrario'
         }
         widgets = {
             'document_id': forms.TextInput(attrs={
@@ -85,6 +105,50 @@ class StudentForm(forms.ModelForm):
             'born_date':   forms.DateInput(attrs={
                 'type': 'date',
                 'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),            
+            'academic_institution_name': forms.TextInput(attrs={
+                'placeholder': 'Ej: U.E. Colegio Integral',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),
+            'academic_institution_address': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Ej: Calle Principal, Edificio #10',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),            
+            'academic_degree': forms.TextInput(attrs={
+                'placeholder': 'Ej: 5to grado',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),          
+            'academic_institution_type': forms.TextInput(attrs={
+                'placeholder': 'Ej: Privado',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),       
+            'housing_type': forms.TextInput(attrs={
+                'placeholder': 'Ej: Apartamento',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),       
+            'housing_condition': forms.TextInput(attrs={
+                'placeholder': 'Ej: Alquilado',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),     
+            'number_people_living_housing': forms.NumberInput(attrs={
+                'placeholder': 'Ej: 4',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),
+            'allergies': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Ej: Alergia a los AINES',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),    
+            'regular_medical_treatment': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Ej: Broncodilatadores',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),     
+            'medical_report': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Ej: Diagnóstico de asma',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
             })
         }
 
@@ -122,3 +186,9 @@ class StudentForm(forms.ModelForm):
         if cellphone and not re.fullmatch(r'^\d{11}$', cellphone):
             raise ValidationError('El número de celular debe tener 11 dígitos.')
         return cellphone
+    
+    def clean_number_people_living_housing(self):
+        number_people_living_housing = self.cleaned_data.get('number_people_living_housing')
+        if number_people_living_housing < 1:
+            raise ValidationError('Debe indicar un valor válido de personas que residen en el hogar.')
+        return number_people_living_housing

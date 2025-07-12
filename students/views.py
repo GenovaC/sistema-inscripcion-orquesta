@@ -12,7 +12,7 @@ def create(request):
         if form.is_valid():
             new_student = form.save(commit=False)
             new_student.save()
-            return redirect(reverse('students:new')) 
+            return redirect(reverse('students:list')) 
     else:
         form = StudentForm()
     return render(request, 'students/student_create.html', {'form': form})

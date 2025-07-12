@@ -76,7 +76,7 @@ class Student(models.Model):
         null=True,
         help_text="Nombre del Plantel Educativo."
     )
-    academic_institution_address = models.CharField(
+    academic_institution_address = models.TextField(
         max_length=200,
         null=True,
         help_text="Dirección del Plantel Educativo."
@@ -86,13 +86,13 @@ class Student(models.Model):
         null=True,
         help_text="Grado académico."
     )
-
-    ############ PÚBLICO
     academic_institution_type = models.CharField(
         max_length=30,
         null=True,
         help_text="Tipo de Plantel (Privado, Mixto, etc.)"
     )
+
+    ############ PÚBLICO
     housing_type = models.CharField(
         max_length=30,
         null=True,
@@ -111,19 +111,19 @@ class Student(models.Model):
     )
 
     ############ DATOS MÉDICOS DEL BENEFICIARIO    
-    allergies = models.CharField(
+    allergies = models.TextField(
         max_length=150,
         null=True,
         blank=True,  
         help_text="Indique las alergias del estudiante. Dejar en blanco si no tiene o se desconocen."
     )
-    regular_medical_treatment = models.CharField(
+    regular_medical_treatment = models.TextField(
         max_length=200,
         null=True,
         blank=True, 
         help_text="Indique si el estudiante toma tratamiento médico regular. Dejar en blanco en caso contrario."
     )
-    medical_report = models.CharField(
+    medical_report = models.TextField(
         max_length=200,
         null=True,
         blank=True, 
