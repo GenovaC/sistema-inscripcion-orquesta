@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
-
 {% block current_page %}Inscribir nuevo alumno{% endblock %}
 
 {% block extra_head %}
@@ -68,17 +67,19 @@
 
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-2 form-group">
-                    {{ form.lastnames.label_tag }}
-                    {{ form.lastnames }}
-                    {% if form.lastnames.help_text %}<p class="helptext">{{ form.lastnames.help_text }}</p>{% endif %}
-                    {% if form.lastnames.errors %}<ul class="errorlist">{% for error in form.lastnames.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-                <div class="sm:col-span-2 form-group">
                     {{ form.names.label_tag }}
                     {{ form.names }}
                     {% if form.names.help_text %}<p class="helptext">{{ form.names.help_text }}</p>{% endif %}
                     {% if form.names.errors %}<ul class="errorlist">{% for error in form.names.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
                 </div>
+                
+                <div class="sm:col-span-2 form-group">
+                    {{ form.lastnames.label_tag }}
+                    {{ form.lastnames }}
+                    {% if form.lastnames.help_text %}<p class="helptext">{{ form.lastnames.help_text }}</p>{% endif %}
+                    {% if form.lastnames.errors %}<ul class="errorlist">{% for error in form.lastnames.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                
                 <div class="sm:col-span-2 form-group">
                     {{ form.document_id.label_tag }}
                     {{ form.document_id }}
