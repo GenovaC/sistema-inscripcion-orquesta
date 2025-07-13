@@ -8,45 +8,68 @@
 {% block content %}
     <div class="max-w-4xl mx-auto bg-white/50 shadow-lg rounded-lg p-8 mt-4">
         <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            Detalle del Estudiante
+            Datos Personales
         </h2>
 
         <div class="space-y-6">
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2">
+                <div class="sm:col-span-3">
                     <p class="block text-sm font-medium leading-6 text-gray-900">Nombres:</p>
                     <p class="mt-1 text-sm text-gray-700">{{ student.names }}</p>
                 </div>
                 
-                <div class="sm:col-span-2">
+                <div class="sm:col-span-3">
                     <p class="block text-sm font-medium leading-6 text-gray-900">Apellidos:</p>
                     <p class="mt-1 text-sm text-gray-700">{{ student.lastnames }}</p>
                 </div>
                 
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.document_id }}</p>
-                </div>
             </div>
 
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
-                <div class="sm:col-span-2">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-3">
                     <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
                     <p class="mt-1 text-sm text-gray-700">{{ student.born_date|date:"d/m/Y" }}</p>
                 </div>
-                <div class="sm:col-span-2">
+                <div class="sm:col-span-3">
                     <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
                     <p class="mt-1 text-sm text-gray-700">{{ student.calculated_age }}</p>
+                </div>
+                
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Nacionalidad:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.get_nationality_display }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.document_id }}</p>
                 </div>
                 <div class="sm:col-span-2">
                     <p class="block text-sm font-medium leading-6 text-gray-900">Género:</p>
                     <p class="mt-1 text-sm text-gray-700">{{ student.get_gender_display }}</p>
                 </div>
+                
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Nacionalidad:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.get_nationality_display }}</p>
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.home_phone }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.cellphone }}</p>
+                </div>
+                
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Correo:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.email }}</p>
                 </div>
             </div>
+            
 
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-full">
@@ -54,24 +77,87 @@
                     <p class="mt-1 text-sm text-gray-700">{{ student.address }}</p>
                 </div>
             </div>
+        </div>
 
+        <br>
+
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
+            Datos Académicos
+        </h2>
+
+        <div class="space-y-6">
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.home_phone }}</p>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Nombres del Plantel Educativo:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_name }}</p>
                 </div>
-                <div class="sm:col-span-3">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.cellphone }}</p>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Grado / Año:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_degree }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Tipo de institución:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_type }}</p>
                 </div>
             </div>
 
+            
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-full">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Correo Electrónico:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.email }}</p>
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Dirección del plantel:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_address }}</p>
                 </div>
             </div>
+
         </div>
+
+        <br>
+
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
+            Datos Socioeconómicos
+        </h2>
+
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Tipo de Vivienda:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.housing_type }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Condición de la Vivienda:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.housing_condition }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Personas viviendo en el hogar:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.number_people_living_housing }}</p>
+                </div>
+            </div>
+
+        </div>
+        
+        <br>
+
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
+            Datos Médicos
+        </h2>
+
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Alergias:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.allergies }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Tratamiento médico regular:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.regular_medical_treatment }}</p>
+                </div>
+                <div class="sm:col-span-2">
+                    <p class="block text-sm font-medium leading-6 text-gray-900">Presenta informe médicos:</p>
+                    <p class="mt-1 text-sm text-gray-700">{{ student.medical_report }}</p>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 {% endblock %}
