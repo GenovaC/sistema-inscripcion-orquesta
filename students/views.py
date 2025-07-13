@@ -1,25 +1,81 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .forms import StudentForm
 from .models import Student
+from django.forms import formsets
+from formtools.wizard.views import SessionWizardView
+from .forms import PersonalDataForm, AcademicSocioeconomicDataForm
 from datetime import date
+from django import forms
 
-@login_required
-def create(request):
-    if request.method == 'POST':
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            new_student = form.save(commit=False)
+FORMS = [
+    ("personal_data", PersonalDataForm),
+    ("academic_socioeconomic_data", AcademicSocioeconomicDataForm)
+]
+
+TEMPLATES = {
+    "personal_data": "students/student_wizard_form.html",
+    "academic_socioeconomic_data": "students/student_wizard_form.html",
+}
+
+class StudentWizard(SessionWizardView):
+
+    # Para determinar qué plantilla HTML se debe renderizar para el paso actual del formulario.
+    def get_template_names(self):
+        return [TEMPLATES[self.steps.current]]      
+    
+    # Proporciona datos adicionales al contexto de la plantilla que se está renderizando para el paso actual
+    def get_context_data(self, form, **kwargs):
+        context = super().get_context_data(form=form, **kwargs)         # Obtener contexto base de la clase padre
+        context['wizard_title'] = "Inscribir nuevo estudiante"
+        context['step_titles'] = {
+            'personal_data': 'Datos Personales',
+            'academic_socioeconomic_data': 'Datos Académicos y Socioeconómicos'
+        }
+        return context
+    
+    #Para pasar argumentos adicionales al constructor de cada formulario en cada paso
+    # Importante: La instancia del modelo se comparte en los formularios.
+    def get_form_kwargs(self, step=None):
+        kwargs = super().get_form_kwargs(step)
+        # Se verifica si ya existe un atributo instance en la vista del wizard. 
+        # Si no existe (como la primera vez que carga el wizard), se crea una nueva instancia vacía del modelo Student        
+        if not hasattr(self, 'instance'):
+            self.instance = Student()
+
+        # Si ya existe (en pasos siguientes), se reutiliza la misma instancia.
+        # La instancia del Student (nueva o existente) se pasa como el argumento 'instance' a cada ModelForm en cada paso.
+        kwargs['instance'] = self.instance      
+        return kwargs
+
+    # Este método es invocado cuando se completan todos los pasos del wizard y el último formulario ha sido validado.
+    # form_list es una lista de todas las instancias de formulario, en orden, de cada paso del wizard. 
+    # Cada formulario en esta lista ya ha pasado su propia validación de formulario.
+    def done(self, form_list, **kwargs):
+        new_student = self.instance     # Recupera la instancia del modelo Student que se ha estado construyendo        
+        
+        for form in form_list:
+            # Asegura que todos los cleaned_data de cada formulario se copian explícitamente a la instancia final
+            # Se excluye la edad porque no es un dato del modelo 'Student'.
+            for field_name, value in form.cleaned_data.items():
+                if hasattr(new_student, field_name) and field_name != 'age':
+                    setattr(new_student, field_name, value)
+
+        try:
+            new_student.full_clean()   # Crítico. ejecuta todas las validaciones definidas a nivel del modelo 
             new_student.save()
-            return redirect(reverse('students:list')) 
-    else:
-        form = StudentForm()
-    return render(request, 'students/student_create.html', {'form': form})
-
+            
+            return redirect(reverse('students:list'))
+            
+        except Exception as e:
+            print(f"Error saving student: {e}")
+            import traceback
+            traceback.print_exc() # For detailed debugging
+            # Falta definir cómo gestionar el error
+            return render(self.request, 'students/error_saving_student.html', {'error': str(e), 'data': new_student.__dict__})
 
 @login_required
-def list(request):
+def list(request):#
     students = Student.objects.all()
     all_students_count = Student.objects.count()
     venezuelan_students_count = Student.objects.filter(nationality='V').count()

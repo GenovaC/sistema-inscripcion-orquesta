@@ -139,20 +139,24 @@ class Student(models.Model):
         super().clean()
 
         # Validación para document_id:
-        if not (3 <= len(self.document_id) <= 8):
-            raise ValidationError({'document_id': 'El ID del documento debe tener entre 3 y 8 caracteres.'})
+        if self.document_id: 
+            if not (3 <= len(self.document_id) <= 8):
+                raise ValidationError({'document_id': 'El ID del documento debe tener entre 3 y 8 caracteres.'})
 
         # Validación para born_date:
-        today = timezone.now().date()
-        min_born_date = today - timezone.timedelta(days=5 * 365.25)  # Aproximación de 5 años
-        if self.born_date and self.born_date > min_born_date:
-            raise ValidationError({'born_date': 'El estudiante debe tener más de 5 años.'})
+        if self.born_date: 
+            today = timezone.now().date()
+            min_born_date = today - timezone.timedelta(days=5 * 365.25)  # Aproximación de 5 años
+            if self.born_date and self.born_date > min_born_date:
+                raise ValidationError({'born_date': 'El estudiante debe tener más de 5 años.'})
 
         # Validación para home_phone y cellphone (si no son nulos):
-        if self.home_phone and not re.fullmatch(r'^\d{11}$', self.home_phone):
-            raise ValidationError({'home_phone': 'El número de teléfono de casa debe ser una cadena de 11 dígitos numéricos.'})
-        if self.cellphone and not re.fullmatch(r'^\d{11}$', self.cellphone):
-            raise ValidationError({'cellphone': 'El número de celular debe ser una cadena de 11 dígitos numéricos.'})
+        if self.home_phone: # Check if the field has a value before applying regex
+            if self.home_phone and not re.fullmatch(r'^\d{11}$', self.home_phone):
+                raise ValidationError({'home_phone': 'El número de teléfono de casa debe ser una cadena de 11 dígitos numéricos.'})
+        if self.cellphone: # Check if the field has a value before applying regex
+            if self.cellphone and not re.fullmatch(r'^\d{11}$', self.cellphone):
+                raise ValidationError({'cellphone': 'El número de celular debe ser una cadena de 11 dígitos numéricos.'})
 
     def __str__(self):
         return f"{self.names} {self.lastnames} ({self.document_id})"
