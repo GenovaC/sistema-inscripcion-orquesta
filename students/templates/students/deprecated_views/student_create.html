@@ -148,6 +148,57 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-2 form-group">
+                    {{ form.academic_institution_name.label_tag }}
+                    {{ form.academic_institution_name }}
+                    {% if form.academic_institution_name.help_text %}<p class="helptext">{{ form.academic_institution_name.help_text }}</p>{% endif %}
+                    {% if form.academic_institution_name.errors %}<ul class="errorlist">{% for error in form.academic_institution_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">
+                    {{ form.academic_institution_type.label_tag }}
+                    {{ form.academic_institution_type }}
+                    {% if form.academic_institution_type.help_text %}<p class="helptext">{{ form.academic_institution_type.help_text }}</p>{% endif %}
+                    {% if form.academic_institution_type.errors %}<ul class="errorlist">{% for error in form.academic_institution_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">
+                    {{ form.academic_degree.label_tag }}
+                    {{ form.academic_degree }}
+                    {% if form.academic_degree.help_text %}<p class="helptext">{{ form.academic_degree.help_text }}</p>{% endif %}
+                    {% if form.academic_degree.errors %}<ul class="errorlist">{% for error in form.academic_degree.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-full form-group">
+                    {{ form.academic_institution_address.label_tag }}
+                    {{ form.academic_institution_address }}
+                    {% if form.academic_institution_address.help_text %}<p class="helptext">{{ form.academic_institution_address.help_text }}</p>{% endif %}
+                    {% if form.academic_institution_address.errors %}<ul class="errorlist">{% for error in form.academic_institution_address.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-2 form-group">
+                    {{ form.housing_type.label_tag }}
+                    {{ form.housing_type }}
+                    {% if form.housing_type.help_text %}<p class="helptext">{{ form.housing_type.help_text }}</p>{% endif %}
+                    {% if form.housing_type.errors %}<ul class="errorlist">{% for error in form.housing_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">
+                    {{ form.housing_condition.label_tag }}
+                    {{ form.housing_condition }}
+                    {% if form.housing_condition.help_text %}<p class="helptext">{{ form.housing_condition.help_text }}</p>{% endif %}
+                    {% if form.housing_condition.errors %}<ul class="errorlist">{% for error in form.housing_condition.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">
+                    {{ form.number_people_living_housing.label_tag }}
+                    {{ form.number_people_living_housing }}
+                    {% if form.number_people_living_housing.help_text %}<p class="helptext">{{ form.number_people_living_housing.help_text }}</p>{% endif %}
+                    {% if form.number_people_living_housing.errors %}<ul class="errorlist">{% for error in form.number_people_living_housing.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
             <div class="mt-10 flex justify-end">
                 <button type="submit" class="inline-flex justify-center text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     GUARDAR INSCRIPCIÓN

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'students',
     'orchestral_projects',
     'tailwind',
-    'theme' # Esta app es de Tailwind
+    'theme', # Esta app es de Tailwind
+    'formtools'
    # 'django_browser_reload' # Recomendado para recarga automática
 ]
 

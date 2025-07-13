@@ -24,15 +24,15 @@ urlpatterns = [
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
 
     # CRUD de estudientes
-    path('students', include(('students.urls', 'students'), namespace='students')),
+    path('students/', include(('students.urls', 'students'), namespace='students')),
     
     # Panel de visualización
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')), 
 
     # CRUD de instrumentos
-    path('instruments', include(('instruments.urls', 'instruments'), namespace='instruments')),
+    path('instruments/', include(('instruments.urls', 'instruments'), namespace='instruments')),
 
     # CRUD de proyectos orquestales
-    path('orchestral_projects', include(('orchestral_projects.urls', 'orchestral_projects'), namespace='orchestral_projects')),
+    path('orchestral_projects/', include(('orchestral_projects.urls', 'orchestral_projects'), namespace='orchestral_projects')),
 
 ]

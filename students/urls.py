@@ -1,9 +1,9 @@
 from django.urls import path
 from . import views
-
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('/create', views.create, name='new'),
-    path('/list', views.list, name='list'),
-    path('/<int:id>', views.detail, name='detail'),
+    path('new', login_required(views.StudentWizard.as_view(views.FORMS)), name='new'),
+    path('', views.list, name='list'),
+    path('<int:id>', views.detail, name='detail'),
 ]

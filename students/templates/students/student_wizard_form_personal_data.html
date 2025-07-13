@@ -1,0 +1,124 @@
+{% extends 'wizard_base.html' %}
+{% load static %}        
+
+{% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
+{% block current_page %}Inscribir nuevo alumno{% endblock %}
+
+{% block wizard_title %}Información Personal del Alumno{% endblock %} 
+
+{% block wizard_form_content  %}      
+
+    {# Campos específicos del Paso 1 #}
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.names.label_tag }}
+            {{ wizard.form.names }}
+            {% if wizard.form.names.help_text %}<p class="helptext">{{ wizard.form.names.help_text }}</p>{% endif %}
+            {% if wizard.form.names.errors %}<ul class="errorlist">{% for error in wizard.form.names.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.lastnames.label_tag }}
+            {{ wizard.form.lastnames }}
+            {% if wizard.form.lastnames.help_text %}<p class="helptext">{{ wizard.form.lastnames.help_text }}</p>{% endif %}
+            {% if wizard.form.lastnames.errors %}<ul class="errorlist">{% for error in wizard.form.lastnames.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.document_id.label_tag }}
+            {{ wizard.form.document_id }}
+            {% if wizard.form.document_id.help_text %}<p class="helptext">{{ wizard.form.document_id.help_text }}</p>{% endif %}
+            {% if wizard.form.document_id.errors %}<ul class="errorlist">{% for error in wizard.form.document_id.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.born_date.label_tag }}
+            {{ wizard.form.born_date }}
+            {% if wizard.form.born_date.help_text %}<p class="helptext">{{ wizard.form.born_date.help_text }}</p>{% endif %}
+            {% if wizard.form.born_date.errors %}<ul class="errorlist">{% for error in wizard.form.born_date.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">                    
+            {# El campo 'age' es de solo lectura, no debería tener errores de validación de usuario #}
+            {{ wizard.form.age.label_tag }}
+            {{ wizard.form.age }}
+            {% if wizard.form.age.help_text %}<p class="helptext">{{ wizard.form.age.help_text }}</p>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.gender.label_tag }}
+            {{ wizard.form.gender }}
+            {% if wizard.form.gender.help_text %}<p class="helptext">{{ wizard.form.gender.help_text }}</p>{% endif %}
+            {% if wizard.form.gender.errors %}<ul class="errorlist">{% for error in wizard.form.gender.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.nationality.label_tag }}
+            {{ wizard.form.nationality }}
+            {% if wizard.form.nationality.help_text %}<p class="helptext">{{ wizard.form.nationality.help_text }}</p>{% endif %}
+            {% if wizard.form.nationality.errors %}<ul class="errorlist">{% for error in wizard.form.nationality.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.address.label_tag }}
+            {{ wizard.form.address }}
+            {% if wizard.form.address.help_text %}<p class="helptext">{{ wizard.form.address.help_text }}</p>{% endif %}
+            {% if wizard.form.address.errors %}<ul class="errorlist">{% for error in wizard.form.address.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.home_phone.label_tag }}
+            {{ wizard.form.home_phone }}
+            {% if wizard.form.home_phone.help_text %}<p class="helptext">{{ wizard.form.home_phone.help_text }}</p>{% endif %}
+            {% if wizard.form.home_phone.errors %}<ul class="errorlist">{% for error in wizard.form.home_phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.cellphone.label_tag }}
+            {{ wizard.form.cellphone }}
+            {% if wizard.form.cellphone.help_text %}<p class="helptext">{{ wizard.form.cellphone.help_text }}</p>{% endif %}
+            {% if wizard.form.cellphone.errors %}<ul class="errorlist">{% for error in wizard.form.cellphone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.email.label_tag }}
+            {{ wizard.form.email }}
+            {% if wizard.form.email.help_text %}<p class="helptext">{{ wizard.form.email.help_text }}</p>{% endif %}
+            {% if wizard.form.email.errors %}<ul class="errorlist">{% for error in wizard.form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block wizard_extra_js  %}
+    {# JS para el cálculo de la edad #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bornDateInput = document.getElementById('id_personal_data-born_date');
+            const ageInput = document.getElementById('id_personal_data-age');
+
+            if (bornDateInput && ageInput) {
+                bornDateInput.addEventListener('change', function() {
+                    const bornDateStr = this.value; // Formato YYYY-MM-DD
+                    if (bornDateStr) {
+                        const bornDate = new Date(bornDateStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - bornDate.getFullYear();
+                        const m = today.getMonth() - bornDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < bornDate.getDate())) {
+                            age--;
+                        }
+                        ageInput.value = age;
+                    } else {
+                        ageInput.value = ''; // Limpiar si la fecha de nacimiento se borra
+                    }
+                });
+            }
+        });
+    </script>
+    
+{% endblock %}
