@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}    {# Este filtro permite acceder a elementos de un diccionario en el template #}
+        
+
+{% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
+{% block current_page %}Inscribir nuevo alumno{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .errorlist {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 4px;
+            color: #ef4444; /* text-red-500 */
+            font-size: 0.875rem; /* sm:text-sm */
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.875rem; /* sm:text-sm */
+            font-weight: 500; /* font-medium */
+            color: #343e4e; /* text-gray-700 */
+            line-height: 1.5rem; /* sm:leading-6 */
+            margin-bottom: 4px; /* small spacing below label */
+        }
+
+        .helptext {
+            display: block;
+            font-size: 0.875rem; /* sm:text-sm */
+            font-weight: 500; /* font-medium */
+            color: #374151; /* text-gray-700 */
+            line-height: 1.5rem; /* sm:leading-6 */
+            margin-bottom: 4px; /* small spacing below label */
+            font-style: italic;
+        }
+
+        .step-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .step-navigation span {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background-color: #e5e7eb; /* gray-200 */
+            color: #4b5563; /* gray-700 */
+            font-weight: 600;
+        }
+        .step-navigation span.current-step {
+            background-color: #6366f1; /* indigo-500 */
+            color: #ffffff; /* white */
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="max-w-4xl mx-auto bg-white/50 shadow-lg rounded-lg p-8 mt-4">
+        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
+            {{ wizard_title }}
+        </h2>
+
+        {# Barra de navegación de pasos #}
+        <div class="step-navigation">
+            {% for step in wizard.steps.all %}
+                <span {% if step == wizard.steps.current %}class="current-step"{% endif %}>
+                    {{ step_titles|get_item:step }}
+                </span>
+            {% endfor %}
+        </div>
+        <p class="text-center text-gray-600 mb-6">Paso {{ wizard.steps.step1 }} de {{ wizard.steps.count }}</p>
+
+        <form action="" method="post" class="space-y-6">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+
+            {# Errores generales del formulario (no asociados a un campo específico) #}
+            {# Only display errors if the form is bound #}
+            {% if wizard.form.is_bound %}
+                {% if wizard.form.non_field_errors %}
+                    <div class="rounded-md bg-red-50 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94l-1.72-1.72z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Se encontraron errores:</h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    <ul role="list" class="list-disc space-y-1 pl-5">
+                                        {% for error in wizard.form.non_field_errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {# Campos específicos del Paso 1 #}
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-2 form-group">
+                    {{ wizard.form.names.label_tag }}
+                    {{ wizard.form.names }}
+                    {% if wizard.form.names.help_text %}<p class="helptext">{{ wizard.form.names.help_text }}</p>{% endif %}
+                    {% if wizard.form.names.errors %}<ul class="errorlist">{% for error in wizard.form.names.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="sm:col-span-2 form-group">
+                    {{ wizard.form.lastnames.label_tag }}
+                    {{ wizard.form.lastnames }}
+                    {% if wizard.form.lastnames.help_text %}<p class="helptext">{{ wizard.form.lastnames.help_text }}</p>{% endif %}
+                    {% if wizard.form.lastnames.errors %}<ul class="errorlist">{% for error in wizard.form.lastnames.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                
+                <div class="sm:col-span-2 form-group">
+                    {{ wizard.form.document_id.label_tag }}
+                    {{ wizard.form.document_id }}
+                    {% if wizard.form.document_id.help_text %}<p class="helptext">{{ wizard.form.document_id.help_text }}</p>{% endif %}
+                    {% if wizard.form.document_id.errors %}<ul class="errorlist">{% for error in wizard.form.document_id.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                <div class="sm:col-span-2 form-group">
+                    {{ wizard.form.born_date.label_tag }}
+                    {{ wizard.form.born_date }}
+                    {% if wizard.form.born_date.help_text %}<p class="helptext">{{ wizard.form.born_date.help_text }}</p>{% endif %}
+                    {% if wizard.form.born_date.errors %}<ul class="errorlist">{% for error in wizard.form.born_date.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">                    
+                    {# El campo 'age' es de solo lectura, no debería tener errores de validación de usuario #}
+                    {{ wizard.form.age.label_tag }}
+                    {{ wizard.form.age }}
+                    {% if wizard.form.age.help_text %}<p class="helptext">{{ wizard.form.age.help_text }}</p>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">
+                    {{ wizard.form.gender.label_tag }}
+                    {{ wizard.form.gender }}
+                    {% if wizard.form.gender.help_text %}<p class="helptext">{{ wizard.form.gender.help_text }}</p>{% endif %}
+                    {% if wizard.form.gender.errors %}<ul class="errorlist">{% for error in wizard.form.gender.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-2 form-group">
+                    {{ wizard.form.nationality.label_tag }}
+                    {{ wizard.form.nationality }}
+                    {% if wizard.form.nationality.help_text %}<p class="helptext">{{ wizard.form.nationality.help_text }}</p>{% endif %}
+                    {% if wizard.form.nationality.errors %}<ul class="errorlist">{% for error in wizard.form.nationality.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-full form-group">
+                    {{ wizard.form.address.label_tag }}
+                    {{ wizard.form.address }}
+                    {% if wizard.form.address.help_text %}<p class="helptext">{{ wizard.form.address.help_text }}</p>{% endif %}
+                    {% if wizard.form.address.errors %}<ul class="errorlist">{% for error in wizard.form.address.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-3 form-group">
+                    {{ wizard.form.home_phone.label_tag }}
+                    {{ wizard.form.home_phone }}
+                    {% if wizard.form.home_phone.help_text %}<p class="helptext">{{ wizard.form.home_phone.help_text }}</p>{% endif %}
+                    {% if wizard.form.home_phone.errors %}<ul class="errorlist">{% for error in wizard.form.home_phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="sm:col-span-3 form-group">
+                    {{ wizard.form.cellphone.label_tag }}
+                    {{ wizard.form.cellphone }}
+                    {% if wizard.form.cellphone.help_text %}<p class="helptext">{{ wizard.form.cellphone.help_text }}</p>{% endif %}
+                    {% if wizard.form.cellphone.errors %}<ul class="errorlist">{% for error in wizard.form.cellphone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-full form-group">
+                    {{ wizard.form.email.label_tag }}
+                    {{ wizard.form.email }}
+                    {% if wizard.form.email.help_text %}<p class="helptext">{{ wizard.form.email.help_text }}</p>{% endif %}
+                    {% if wizard.form.email.errors %}<ul class="errorlist">{% for error in wizard.form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+            </div>
+
+            <div class="mt-10 flex justify-end">
+                {% if wizard.steps.prev %}
+                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200">
+                        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent"> ANTERIOR </span>
+                    </button>
+                {% endif %}                
+                <button type="submit"  class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200">
+                    <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">  SIGUIENTE   </span>
+                </button>
+
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {# Incluimos el JS para el cálculo de la edad en todas las etapas, por si el campo born_date se encuentra en alguna de ellas #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bornDateInput = document.getElementById('id_personal_data-born_date');
+            const ageInput = document.getElementById('id_personal_data-age');
+
+            if (bornDateInput && ageInput) {
+                bornDateInput.addEventListener('change', function() {
+                    const bornDateStr = this.value; // Formato YYYY-MM-DD
+                    if (bornDateStr) {
+                        const bornDate = new Date(bornDateStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - bornDate.getFullYear();
+                        const m = today.getMonth() - bornDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < bornDate.getDate())) {
+                            age--;
+                        }
+                        ageInput.value = age;
+                    } else {
+                        ageInput.value = ''; // Limpiar si la fecha de nacimiento se borra
+                    }
+                });
+            }
+        });
+    </script>
+    
+{% endblock %}

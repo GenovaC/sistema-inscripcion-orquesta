@@ -14,8 +14,8 @@ FORMS = [
 ]
 
 TEMPLATES = {
-    "personal_data": "students/student_wizard_form.html",
-    "academic_socioeconomic_data": "students/student_wizard_form.html",
+    "personal_data": "students/student_wizard_form_personal_data.html",
+    "academic_socioeconomic_data": "students/student_wizard_form_academic_data.html",
 }
 
 class StudentWizard(SessionWizardView):
