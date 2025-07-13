@@ -1,170 +1,63 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load custom_filters %}    {# Este filtro permite acceder a elementos de un diccionario en el template #}
-        
+{% extends 'wizard_base.html' %}
+{% load static %}        
 
 {% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
 {% block current_page %}Inscribir nuevo alumno{% endblock %}
 
-{% block extra_head %}
-    <style>
-        .errorlist {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 4px;
-            color: #ef4444; /* text-red-500 */
-            font-size: 0.875rem; /* sm:text-sm */
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.875rem; /* sm:text-sm */
-            font-weight: 500; /* font-medium */
-            color: #343e4e; /* text-gray-700 */
-            line-height: 1.5rem; /* sm:leading-6 */
-            margin-bottom: 4px; /* small spacing below label */
-        }
+{% block wizard_title %}Información Académica y Socioeconómica del Estudiante{% endblock %} 
 
-        .helptext {
-            display: block;
-            font-size: 0.875rem; /* sm:text-sm */
-            font-weight: 500; /* font-medium */
-            color: #374151; /* text-gray-700 */
-            line-height: 1.5rem; /* sm:leading-6 */
-            margin-bottom: 4px; /* small spacing below label */
-            font-style: italic;
-        }
+{% block wizard_form_content  %}     
 
-        .step-navigation {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .step-navigation span {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            background-color: #e5e7eb; /* gray-200 */
-            color: #4b5563; /* gray-700 */
-            font-weight: 600;
-        }
-        .step-navigation span.current-step {
-            background-color: #6366f1; /* indigo-500 */
-            color: #ffffff; /* white */
-        }
-    </style>
-{% endblock %}
-
-
-{% block content %}
-    <div class="max-w-4xl mx-auto bg-white/50 shadow-lg rounded-lg p-8 mt-4">
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            {{ wizard_title }}
-        </h2>
-
-        {# Barra de navegación de pasos #}
-        <div class="step-navigation">
-            {% for step in wizard.steps.all %}
-                <span {% if step == wizard.steps.current %}class="current-step"{% endif %}>
-                    {{ step_titles|get_item:step }}
-                </span>
-            {% endfor %}
+    {# Campos específicos del Paso 2 #}
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.academic_institution_name.label_tag }}
+            {{ wizard.form.academic_institution_name }}
+            {% if wizard.form.academic_institution_name.help_text %}<p class="helptext">{{ wizard.form.academic_institution_name.help_text }}</p>{% endif %}
+            {% if wizard.form.academic_institution_name.errors %}<ul class="errorlist">{% for error in wizard.form.academic_institution_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
-        <p class="text-center text-gray-600 mb-6">Paso {{ wizard.steps.step1 }} de {{ wizard.steps.count }}</p>
-
-        <form action="" method="post" class="space-y-6">
-            {% csrf_token %}
-            {{ wizard.management_form }}
-
-            {# Errores generales del formulario (no asociados a un campo específico) #}
-            {# Only display errors if the form is bound #}
-            {% if wizard.form.is_bound %}
-                {% if wizard.form.non_field_errors %}
-                    <div class="rounded-md bg-red-50 p-4 mb-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94l-1.72-1.72z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-medium text-red-800">Se encontraron errores:</h3>
-                                <div class="mt-2 text-sm text-red-700">
-                                    <ul role="list" class="list-disc space-y-1 pl-5">
-                                        {% for error in wizard.form.non_field_errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endif %}
-
-            {# Campos específicos del Paso 1 #}
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2 form-group">
-                    {{ wizard.form.academic_institution_name.label_tag }}
-                    {{ wizard.form.academic_institution_name }}
-                    {% if wizard.form.academic_institution_name.help_text %}<p class="helptext">{{ wizard.form.academic_institution_name.help_text }}</p>{% endif %}
-                    {% if wizard.form.academic_institution_name.errors %}<ul class="errorlist">{% for error in wizard.form.academic_institution_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-                <div class="sm:col-span-2 form-group">
-                    {{ wizard.form.academic_institution_type.label_tag }}
-                    {{ wizard.form.academic_institution_type }}
-                    {% if wizard.form.academic_institution_type.help_text %}<p class="helptext">{{ wizard.form.academic_institution_type.help_text }}</p>{% endif %}
-                    {% if wizard.form.academic_institution_type.errors %}<ul class="errorlist">{% for error in wizard.form.academic_institution_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-                <div class="sm:col-span-2 form-group">
-                    {{ wizard.form.academic_degree.label_tag }}
-                    {{ wizard.form.academic_degree }}
-                    {% if wizard.form.academic_degree.help_text %}<p class="helptext">{{ wizard.form.academic_degree.help_text }}</p>{% endif %}
-                    {% if wizard.form.academic_degree.errors %}<ul class="errorlist">{% for error in wizard.form.academic_degree.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-full form-group">
-                    {{ wizard.form.academic_institution_address.label_tag }}
-                    {{ wizard.form.academic_institution_address }}
-                    {% if wizard.form.academic_institution_address.help_text %}<p class="helptext">{{ wizard.form.academic_institution_address.help_text }}</p>{% endif %}
-                    {% if wizard.form.academic_institution_address.errors %}<ul class="errorlist">{% for error in wizard.form.academic_institution_address.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2 form-group">
-                    {{ wizard.form.housing_type.label_tag }}
-                    {{ wizard.form.housing_type }}
-                    {% if wizard.form.housing_type.help_text %}<p class="helptext">{{ wizard.form.housing_type.help_text }}</p>{% endif %}
-                    {% if wizard.form.housing_type.errors %}<ul class="errorlist">{% for error in wizard.form.housing_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-                <div class="sm:col-span-2 form-group">
-                    {{ wizard.form.housing_condition.label_tag }}
-                    {{ wizard.form.housing_condition }}
-                    {% if wizard.form.housing_condition.help_text %}<p class="helptext">{{ wizard.form.housing_condition.help_text }}</p>{% endif %}
-                    {% if wizard.form.housing_condition.errors %}<ul class="errorlist">{% for error in wizard.form.housing_condition.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-                <div class="sm:col-span-2 form-group">
-                    {{ wizard.form.number_people_living_housing.label_tag }}
-                    {{ wizard.form.number_people_living_housing }}
-                    {% if wizard.form.number_people_living_housing.help_text %}<p class="helptext">{{ wizard.form.number_people_living_housing.help_text }}</p>{% endif %}
-                    {% if wizard.form.number_people_living_housing.errors %}<ul class="errorlist">{% for error in wizard.form.number_people_living_housing.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
-                </div>
-            </div>
-
-            <div class="mt-10 flex justify-between">
-                {% if wizard.steps.prev %}
-                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200">
-                        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent"> ANTERIOR </span>
-                    </button>
-                {% endif %}                
-                <button type="submit"  class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200">
-                    <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">  {% if wizard.steps.next %}SIGUIENTE{% else %}GUARDAR INSCRIPCIÓN{% endif %}   </span>
-                </button>
-
-            </div>
-            
-        </form>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.academic_institution_type.label_tag }}
+            {{ wizard.form.academic_institution_type }}
+            {% if wizard.form.academic_institution_type.help_text %}<p class="helptext">{{ wizard.form.academic_institution_type.help_text }}</p>{% endif %}
+            {% if wizard.form.academic_institution_type.errors %}<ul class="errorlist">{% for error in wizard.form.academic_institution_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.academic_degree.label_tag }}
+            {{ wizard.form.academic_degree }}
+            {% if wizard.form.academic_degree.help_text %}<p class="helptext">{{ wizard.form.academic_degree.help_text }}</p>{% endif %}
+            {% if wizard.form.academic_degree.errors %}<ul class="errorlist">{% for error in wizard.form.academic_degree.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
     </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.academic_institution_address.label_tag }}
+            {{ wizard.form.academic_institution_address }}
+            {% if wizard.form.academic_institution_address.help_text %}<p class="helptext">{{ wizard.form.academic_institution_address.help_text }}</p>{% endif %}
+            {% if wizard.form.academic_institution_address.errors %}<ul class="errorlist">{% for error in wizard.form.academic_institution_address.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.housing_type.label_tag }}
+            {{ wizard.form.housing_type }}
+            {% if wizard.form.housing_type.help_text %}<p class="helptext">{{ wizard.form.housing_type.help_text }}</p>{% endif %}
+            {% if wizard.form.housing_type.errors %}<ul class="errorlist">{% for error in wizard.form.housing_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.housing_condition.label_tag }}
+            {{ wizard.form.housing_condition }}
+            {% if wizard.form.housing_condition.help_text %}<p class="helptext">{{ wizard.form.housing_condition.help_text }}</p>{% endif %}
+            {% if wizard.form.housing_condition.errors %}<ul class="errorlist">{% for error in wizard.form.housing_condition.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.number_people_living_housing.label_tag }}
+            {{ wizard.form.number_people_living_housing }}
+            {% if wizard.form.number_people_living_housing.help_text %}<p class="helptext">{{ wizard.form.number_people_living_housing.help_text }}</p>{% endif %}
+            {% if wizard.form.number_people_living_housing.errors %}<ul class="errorlist">{% for error in wizard.form.number_people_living_housing.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
 {% endblock %}

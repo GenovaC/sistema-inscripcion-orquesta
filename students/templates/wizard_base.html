@@ -7,7 +7,7 @@
 {% block current_page %}Inscribir nuevo alumno{% endblock %}
 
 {% block extra_head %}
-{{ block.super }} {# Importante para mantener los estilos de base.html #}
+{{ block.super }} {# Para mantener los estilos de base.html #}
     <style>
         .errorlist {
             list-style-type: none;
@@ -60,7 +60,7 @@
 {% block content %}
     <div class="max-w-4xl mx-auto bg-white/50 shadow-lg rounded-lg p-8 mt-4">
         <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            {{ wizard_title }}
+            {% block wizard_title %}{{ wizard_title }}{% endblock %} {# Bloque para el título del wizard #}
         </h2>
 
         {# Barra de navegación de pasos #}
@@ -123,6 +123,6 @@
 {% endblock %}
 
 {% block extra_js %}
-    {{ block.super }} {# Importante para mantener los scripts de base.html #}
+    {{ block.super }} {# Para mantener los scripts de base.html #}
     {% block wizard_extra_js %}{% endblock %} {# Un bloque para scripts específicos de cada paso #}
 {% endblock %}
