@@ -3,11 +3,11 @@ db.sqlite3
 
 # Archivos de medios y estáticos (si los gestionas localmente)
 media/
-static/
+assets/
 
 # Variables de entorno (si usas un archivo .env)
 .env
-venv/ # Tu entorno virtual de Python
+venv/ 
 
 # Archivos de log
 *.log
@@ -17,8 +17,8 @@ local_settings.py
 
 # Archivos del sistema operativo
 .DS_Store
-.idea/ # Para usuarios de PyCharm
-*.swp # Para usuarios de Vim
+.idea/ 
+*.swp 
 
 # Python
 *.pyc
@@ -29,11 +29,11 @@ __pycache__/
 *.egg-info/
 
 # Node.js
-/theme/node_modules/ # <-- ¡Asegúrate de incluir esta línea!
+/theme/node_modules/ 
 npm-debug.log
 yarn-debug.log
 .pnp.*
 
 # IDEs
-.idea/ # Para PyCharm
-.vscode/ # Para VS Code
+.idea/
+.vscode/ 
