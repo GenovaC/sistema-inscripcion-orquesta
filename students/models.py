@@ -15,6 +15,13 @@ class Student(models.Model):
         ('Masculine', 'Masculino'),
     ]
 
+    MARITAL_STATUS_CHOICES = [
+        ('Single', 'Soltero/a'),
+        ('Married', 'Casado/a'),
+        ('Divorced', 'Divorciado/a'),
+        ('Widowed', 'Viudo/a')
+    ]
+
     ############ Datos personales del BENEFICIARIO
     document_id = models.CharField(
         max_length=8,
@@ -69,6 +76,187 @@ class Student(models.Model):
         null=True,
         help_text="Número de teléfono celular."
     )
+
+    ############ DATOS DEL REPRESENTANTE LEGAL
+
+    relationship_legal_parent = models.CharField(
+        max_length=20,
+        null=True,
+        help_text="Parentesco del representante legal."
+    )
+
+    fullname_legal_parent =  models.CharField(
+        max_length=70,
+        null=True,
+        help_text="Nombre completo del representante legal."
+    )
+
+    born_date_legal_parent = models.DateField(
+        help_text="Fecha de nacimiento del representante legal",
+        null=True,
+    )
+
+    age_legal_parent = models.IntegerField(
+        null=True,
+        validators=[MinValueValidator(18)],
+        help_text="Edad del representante legal."
+    )
+    marital_status_legal_parent = models.CharField(
+        max_length=20,
+        choices=MARITAL_STATUS_CHOICES,
+        null=True,
+        help_text="Estado civil del representante legal.",
+    )
+    document_id_legal_parent = models.CharField(
+        max_length=8,
+        unique=False,  # Un representante legal puede tener varios representados
+        null=True,
+        help_text="Cédula o Pasaporte del representante legal.",
+    )
+    nationality_id_legal_parent = models.CharField(
+        max_length=1,
+        choices=DOCUMENT_TYPE_CHOICES,
+        null=True,
+        help_text="Nacionalidad del representante legal.",
+    )
+    marital_status_legal_parent = models.CharField(
+        max_length=20,
+        choices=MARITAL_STATUS_CHOICES,
+        null=True,
+        help_text="Estado civil del representante legal."
+    )
+    profession_legal_parent = models.CharField(
+        max_length=30,
+        null=True,
+        help_text="Profesión u oficio del representante legal."
+    )
+    address_legal_parent = models.TextField(
+        max_length=300,
+        null=True,
+        help_text="Dirección de Habitación (Solo si es diferente a la del Beneficiario)."
+    )
+    home_phone_legal_parent = models.CharField(
+        max_length=11,
+        blank=True,  # Permite que el campo esté en blanco en el formulario
+        null=True,   
+        help_text="Número de Habitación (Solo si es diferente a la del Beneficiario)."
+    )
+    cellphone_legal_parent = models.CharField(
+        max_length=11,
+        null=True,
+        help_text="Número de teléfono celular."
+    )
+    email_legal_parent = models.EmailField(
+        max_length=50,
+        null=True,
+        help_text="Correo electrónico del representante legal."
+    )
+    workplace_legal_parent = models.CharField(
+        max_length=40,
+        null=True,
+        help_text="Lugar de trabajo del representante legal."
+    )
+    job_title_legal_parent = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        help_text="Cargo del representante legal."
+    )    
+    office_phone_legal_parent = models.CharField(
+        max_length=11,
+        blank=True,  
+        null=True,   
+        help_text="Número de Oficina."
+    )
+
+    ############ DATOS DE OTRO FAMILIAR
+
+    relationship_relative = models.CharField(
+        max_length=20,
+        null=True,
+        help_text="Parentesco del familiar."
+    )
+
+    fullname_relative =  models.CharField(
+        max_length=70,
+        null=True,
+        help_text="Nombre completo del familiar."
+    )
+
+    born_date_relative = models.DateField(
+        help_text="Fecha de nacimiento del familiar",
+        null=True,
+    )
+
+    age_relative = models.IntegerField(
+        null=True,
+        validators=[MinValueValidator(18)],
+        help_text="Edad del familiar."
+    )
+    marital_status_relative = models.CharField(
+        max_length=20,
+        choices=MARITAL_STATUS_CHOICES,
+        null=True,
+        help_text="Estado civil del familiar.",
+    )
+    document_id_relative = models.CharField(
+        max_length=8,
+        unique=False,  # Un representante legal puede tener varios representados
+        null=True,
+        help_text="Cédula o Pasaporte del familiar.",
+    )
+    nationality_id_relative = models.CharField(
+        max_length=1,
+        choices=DOCUMENT_TYPE_CHOICES,
+        null=True,
+        help_text="Nacionalidad del familiar.",
+    )
+    marital_status_relative = models.CharField(
+        max_length=20,
+        choices=MARITAL_STATUS_CHOICES,
+        null=True,
+        help_text="Estado civil del familiar."
+    )
+    profession_relative = models.CharField(
+        max_length=30,
+        null=True,
+        help_text="Profesión u oficio del familiar."
+    )
+    address_relative = models.TextField(
+        max_length=300,
+        blank=True,
+        null=True,
+        help_text="Dirección de Habitación (Solo si es diferente a la del Beneficiario)."
+    )
+    home_phone_relative = models.CharField(
+        max_length=11,
+        blank=True,  # Permite que el campo esté en blanco en el formulario
+        null=True,   
+        help_text="Número de Habitación (Solo si es diferente a la del Beneficiario)."
+    )
+    cellphone_relative = models.CharField(
+        max_length=11,
+        null=True,
+        help_text="Número de teléfono celular del familiar."
+    )
+    workplace_relative = models.CharField(
+        max_length=40,
+        null=True,
+        help_text="Lugar de trabajo del familiar."
+    )
+    job_title_relative = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        help_text="Cargo del familiar."
+    )    
+    office_phone_relative = models.CharField(
+        max_length=11,
+        blank=True,  
+        null=True,   
+        help_text="Número de Oficina del familiar."
+    )
+
 
     ############ Datos Académicos DEL BENEFICIARIO
     academic_institution_name = models.CharField(
@@ -157,6 +345,40 @@ class Student(models.Model):
         if self.cellphone: # Check if the field has a value before applying regex
             if self.cellphone and not re.fullmatch(r'^\d{11}$', self.cellphone):
                 raise ValidationError({'cellphone': 'El número de celular debe ser una cadena de 11 dígitos numéricos.'})
+            
+        if self.age_legal_parent:
+            if self.age_legal_parent < 18:
+                raise ValidationError({'age_legal_parent': 'El representante legal debe ser mayor de edad.'})
+            
 
+        # Validación para datos del representante legal
+
+        if self.home_phone_legal_parent: # Check if the field has a value before applying regex
+            if self.home_phone_legal_parent and not re.fullmatch(r'^\d{11}$', self.home_phone_legal_parent):
+                raise ValidationError({'home_phone_legal_parent': 'El número de teléfono de casa debe ser una cadena de 11 dígitos numéricos.'})
+            
+        if self.cellphone_legal_parent: # Check if the field has a value before applying regex
+            if self.cellphone_legal_parent and not re.fullmatch(r'^\d{11}$', self.cellphone_legal_parent):
+                raise ValidationError({'cellphone_legal_parent': 'El número de celular debe ser una cadena de 11 dígitos numéricos.'})
+            
+        if self.office_phone_legal_parent: # Check if the field has a value before applying regex
+            if self.office_phone_legal_parent and not re.fullmatch(r'^\d{11}$', self.office_phone_legal_parent):
+                raise ValidationError({'office_phone_legal_parent': 'El número de oficina debe ser una cadena de 11 dígitos numéricos.'})
+            
+        
+        # Validación para datos del familiar secundario
+
+        if self.home_phone_relative: # Check if the field has a value before applying regex
+            if self.home_phone_relative and not re.fullmatch(r'^\d{11}$', self.home_phone_relative):
+                raise ValidationError({'home_phone_relative': 'El número de teléfono de casa debe ser una cadena de 11 dígitos numéricos.'})
+            
+        if self.cellphone_relative: # Check if the field has a value before applying regex
+            if self.cellphone_relative and not re.fullmatch(r'^\d{11}$', self.cellphone_relative):
+                raise ValidationError({'cellphone_relative': 'El número de celular debe ser una cadena de 11 dígitos numéricos.'})
+            
+        if self.office_phone_relative: # Check if the field has a value before applying regex
+            if self.office_phone_relative and not re.fullmatch(r'^\d{11}$', self.office_phone_relative):
+                raise ValidationError({'office_phone_relative': 'El número de oficina debe ser una cadena de 11 dígitos numéricos.'})
+            
     def __str__(self):
         return f"{self.names} {self.lastnames} ({self.document_id})"
