@@ -119,12 +119,6 @@ class Student(models.Model):
         null=True,
         help_text="Nacionalidad del representante legal.",
     )
-    marital_status_legal_parent = models.CharField(
-        max_length=20,
-        choices=MARITAL_STATUS_CHOICES,
-        null=True,
-        help_text="Estado civil del representante legal."
-    )
     profession_legal_parent = models.CharField(
         max_length=30,
         null=True,
@@ -210,12 +204,6 @@ class Student(models.Model):
         choices=DOCUMENT_TYPE_CHOICES,
         null=True,
         help_text="Nacionalidad del familiar.",
-    )
-    marital_status_relative = models.CharField(
-        max_length=20,
-        choices=MARITAL_STATUS_CHOICES,
-        null=True,
-        help_text="Estado civil del familiar."
     )
     profession_relative = models.CharField(
         max_length=30,
@@ -353,6 +341,10 @@ class Student(models.Model):
 
         # Validación para datos del representante legal
 
+        if self.document_id_legal_parent: 
+            if not (7 <= len(self.document_id_legal_parent) <= 8):
+                raise ValidationError({'document_id_legal_parent': 'El ID del documento debe tener entre 7 y 8 caracteres.'})
+
         if self.home_phone_legal_parent: # Check if the field has a value before applying regex
             if self.home_phone_legal_parent and not re.fullmatch(r'^\d{11}$', self.home_phone_legal_parent):
                 raise ValidationError({'home_phone_legal_parent': 'El número de teléfono de casa debe ser una cadena de 11 dígitos numéricos.'})
@@ -366,7 +358,10 @@ class Student(models.Model):
                 raise ValidationError({'office_phone_legal_parent': 'El número de oficina debe ser una cadena de 11 dígitos numéricos.'})
             
         
-        # Validación para datos del familiar secundario
+        # Validación para datos del familiar secundario        
+        if self.document_id_relative: 
+            if not (7 <= len(self.document_id_relative) <= 8):
+                raise ValidationError({'document_id_relative': 'El ID del documento debe tener entre 7 y 8 caracteres.'})
 
         if self.home_phone_relative: # Check if the field has a value before applying regex
             if self.home_phone_relative and not re.fullmatch(r'^\d{11}$', self.home_phone_relative):

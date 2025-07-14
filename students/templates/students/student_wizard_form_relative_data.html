@@ -1,0 +1,146 @@
+{% extends 'wizard_base.html' %}
+{% load static %}        
+
+{% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
+{% block current_page %}Inscribir nuevo alumno{% endblock %}
+
+{% block wizard_title %}Información de un Familiar Adicional{% endblock %} 
+
+{% block wizard_form_content  %}     
+
+    {# Campos específicos del Paso 3 #}
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.relationship_relative.label_tag }}
+            {{ wizard.form.relationship_relative }}
+            {% if wizard.form.relationship_relative.help_text %}<p class="helptext">{{ wizard.form.relationship_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.relationship_relative.errors %}<ul class="errorlist">{% for error in wizard.form.relationship_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.nationality_id_relative.label_tag }}
+            {{ wizard.form.nationality_id_relative }}
+            {% if wizard.form.nationality_id_relative.help_text %}<p class="helptext">{{ wizard.form.nationality_id_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.nationality_id_relative.errors %}<ul class="errorlist">{% for error in wizard.form.nationality_id_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.document_id_relative.label_tag }}
+            {{ wizard.form.document_id_relative }}
+            {% if wizard.form.document_id_relative.help_text %}<p class="helptext">{{ wizard.form.document_id_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.document_id_relative.errors %}<ul class="errorlist">{% for error in wizard.form.document_id_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.fullname_relative.label_tag }}
+            {{ wizard.form.fullname_relative }}
+            {% if wizard.form.fullname_relative.help_text %}<p class="helptext">{{ wizard.form.fullname_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.fullname_relative.errors %}<ul class="errorlist">{% for error in wizard.form.fullname_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.born_date_relative.label_tag }}
+            {{ wizard.form.born_date_relative }}
+            {% if wizard.form.born_date_relative.help_text %}<p class="helptext">{{ wizard.form.born_date_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.born_date_relative.errors %}<ul class="errorlist">{% for error in wizard.form.born_date_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        
+        <div class="sm:col-span-2 form-group">                    
+            {# El campo 'age_relative' es de solo lectura, no debería tener errores de validación de usuario #}
+            {{ wizard.form.age_relative.label_tag }}
+            {{ wizard.form.age_relative }}
+            {% if wizard.form.age_relative.help_text %}<p class="helptext">{{ wizard.form.age_relative.help_text }}</p>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.marital_status_relative.label_tag }}
+            {{ wizard.form.marital_status_relative }}
+            {% if wizard.form.marital_status_relative.help_text %}<p class="helptext">{{ wizard.form.marital_status_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.marital_status_relative.errors %}<ul class="errorlist">{% for error in wizard.form.marital_status_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.profession_relative.label_tag }}
+            {{ wizard.form.profession_relative }}
+            {% if wizard.form.profession_relative.help_text %}<p class="helptext">{{ wizard.form.profession_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.profession_relative.errors %}<ul class="errorlist">{% for error in wizard.form.profession_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.home_phone_relative.label_tag }}
+            {{ wizard.form.home_phone_relative }}
+            {% if wizard.form.home_phone_relative.help_text %}<p class="helptext">{{ wizard.form.home_phone_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.home_phone_relative.errors %}<ul class="errorlist">{% for error in wizard.form.home_phone_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.cellphone_relative.label_tag }}
+            {{ wizard.form.cellphone_relative }}
+            {% if wizard.form.cellphone_relative.help_text %}<p class="helptext">{{ wizard.form.cellphone_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.cellphone_relative.errors %}<ul class="errorlist">{% for error in wizard.form.cellphone_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.address_relative.label_tag }}
+            {{ wizard.form.address_relative }}
+            {% if wizard.form.address_relative.help_text %}<p class="helptext">{{ wizard.form.address_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.address_relative.errors %}<ul class="errorlist">{% for error in wizard.form.address_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.workplace_relative.label_tag }}
+            {{ wizard.form.workplace_relative }}
+            {% if wizard.form.workplace_relative.help_text %}<p class="helptext">{{ wizard.form.workplace_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.workplace_relative.errors %}<ul class="errorlist">{% for error in wizard.form.workplace_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.job_title_relative.label_tag }}
+            {{ wizard.form.job_title_relative }}
+            {% if wizard.form.job_title_relative.help_text %}<p class="helptext">{{ wizard.form.job_title_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.job_title_relative.errors %}<ul class="errorlist">{% for error in wizard.form.job_title_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.office_phone_relative.label_tag }}
+            {{ wizard.form.office_phone_relative }}
+            {% if wizard.form.office_phone_relative.help_text %}<p class="helptext">{{ wizard.form.office_phone_relative.help_text }}</p>{% endif %}
+            {% if wizard.form.office_phone_relative.errors %}<ul class="errorlist">{% for error in wizard.form.office_phone_relative.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+    
+
+{% endblock %}
+
+{% block wizard_extra_js  %}
+    {# JS para el cálculo de la edad #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bornDateInput = document.getElementById('id_relative_data-born_date_relative');
+            const ageInput = document.getElementById('id_relative_data-age_relative');
+
+            if (bornDateInput && ageInput) {
+                bornDateInput.addEventListener('change', function() {
+                    const bornDateStr = this.value; // Formato YYYY-MM-DD
+                    if (bornDateStr) {
+                        const bornDate = new Date(bornDateStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - bornDate.getFullYear();
+                        const m = today.getMonth() - bornDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < bornDate.getDate())) {
+                            age--;
+                        }
+                        ageInput.value = age;
+                    } else {
+                        ageInput.value = ''; // Limpiar si la fecha de nacimiento se borra
+                    }
+                });
+            }
+        });
+    </script>
+    
+{% endblock %}

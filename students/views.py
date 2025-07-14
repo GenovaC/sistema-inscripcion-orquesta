@@ -4,18 +4,22 @@ from django.contrib.auth.decorators import login_required
 from .models import Student
 from django.forms import formsets
 from formtools.wizard.views import SessionWizardView
-from .forms import PersonalDataForm, AcademicSocioeconomicDataForm
+from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, RelativeDataForm
 from datetime import date
 from django import forms
 
 FORMS = [
     ("personal_data", PersonalDataForm),
-    ("academic_socioeconomic_data", AcademicSocioeconomicDataForm)
+    ("legal_parent_data", LegalParentDataForm),
+    ("relative_data", RelativeDataForm),
+    ("academic_socioeconomic_data", AcademicSocioeconomicDataForm),
 ]
 
 TEMPLATES = {
     "personal_data": "students/student_wizard_form_personal_data.html",
     "academic_socioeconomic_data": "students/student_wizard_form_academic_data.html",
+    "legal_parent_data": "students/student_wizard_form_legal_parent_data.html",
+    "relative_data": "students/student_wizard_form_relative_data.html",
 }
 
 class StudentWizard(SessionWizardView):
@@ -30,7 +34,9 @@ class StudentWizard(SessionWizardView):
         context['wizard_title'] = "Inscribir nuevo estudiante"
         context['step_titles'] = {
             'personal_data': 'Datos Personales',
-            'academic_socioeconomic_data': 'Datos Académicos y Socioeconómicos'
+            'academic_socioeconomic_data': 'Datos Académicos y Socioeconómicos',
+            'legal_parent_data': 'Representante Legal',
+            'relative_data': 'Otro familiar'
         }
         return context
     
@@ -75,11 +81,11 @@ class StudentWizard(SessionWizardView):
             return render(self.request, 'students/error_saving_student.html', {'error': str(e), 'data': new_student.__dict__})
 
 @login_required
-def list(request):#
+def list(request):
     students = Student.objects.all()
     all_students_count = Student.objects.count()
     venezuelan_students_count = Student.objects.filter(nationality='V').count()
-    foreigners_students_count = all_students_count - venezuelan_students_count
+    foreigners_students_count = Student.objects.filter(nationality='E').count()
     
     return render(request, 'students/student_list.html', {
         'students': students,
