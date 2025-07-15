@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Student
-from django.forms import formsets
 from formtools.wizard.views import SessionWizardView
+from .models import Student
+from academic_period.models import DetailAcademicInscription, AcademicPeriod
+from instruments.models import Instrument
+from orchestral_projects.models import OrchestralProject
 from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, RelativeDataForm
+from academic_period.forms import DetailAcademicInscriptionForm
 from datetime import date
-from django import forms
 
 FORMS = [
+    ("inscription_data", DetailAcademicInscriptionForm),
     ("personal_data", PersonalDataForm),
     ("legal_parent_data", LegalParentDataForm),
     ("relative_data", RelativeDataForm),
@@ -16,6 +19,7 @@ FORMS = [
 ]
 
 TEMPLATES = {
+    "inscription_data": "students/student_wizard_form_inscription_data.html",
     "personal_data": "students/student_wizard_form_personal_data.html",
     "academic_socioeconomic_data": "students/student_wizard_form_academic_data.html",
     "legal_parent_data": "students/student_wizard_form_legal_parent_data.html",
@@ -28,57 +32,84 @@ class StudentWizard(SessionWizardView):
     def get_template_names(self):
         return [TEMPLATES[self.steps.current]]      
     
+     # --- MÉTODO PARA PASAR DATOS A LOS SELECTORES DEL INSCRIPTION_DATA_TEMPLATE ---
+    def get_form(self, step=None, data=None, files=None):
+        form = super().get_form(step, data, files)
+
+        # Si estamos en el paso de inscripción, ajustamos los querysets
+        if step == 'inscription_data':
+            # Ejemplos de filtros, si llegan a ser necesarios:
+            # form.fields['id_orchestral_project'].queryset = OrchestralProject.objects.filter(is_active=True)
+            # form.fields['id_instrument'].queryset = Instrument.objects.order_by('name')
+            # form.fields['id_academic_period'].queryset = AcademicPeriod.objects.filter(is_current=True)
+
+            # Actualmente solo se obtieenn todos los objetos.
+            form.fields['id_orchestral_project'].queryset = OrchestralProject.objects.all()
+            form.fields['id_instrument'].queryset         = Instrument.objects.all()
+            form.fields['id_academic_period'].queryset    = AcademicPeriod.objects.all()
+
+        return form
+    
     # Proporciona datos adicionales al contexto de la plantilla que se está renderizando para el paso actual
     def get_context_data(self, form, **kwargs):
         context = super().get_context_data(form=form, **kwargs)         # Obtener contexto base de la clase padre
         context['wizard_title'] = "Inscribir nuevo estudiante"
         context['step_titles'] = {
-            'personal_data': 'Datos Personales',
+            'inscription_data':            'Datos de Inscripción',
+            'personal_data':               'Datos Personales',
             'academic_socioeconomic_data': 'Datos Académicos y Socioeconómicos',
-            'legal_parent_data': 'Representante Legal',
-            'relative_data': 'Otro familiar'
+            'legal_parent_data':           'Representante Legal',
+            'relative_data':                'Otro familiar'
         }
         return context
     
-    #Para pasar argumentos adicionales al constructor de cada formulario en cada paso
-    # Importante: La instancia del modelo se comparte en los formularios.
-    def get_form_kwargs(self, step=None):
-        kwargs = super().get_form_kwargs(step)
-        # Se verifica si ya existe un atributo instance en la vista del wizard. 
-        # Si no existe (como la primera vez que carga el wizard), se crea una nueva instancia vacía del modelo Student        
-        if not hasattr(self, 'instance'):
-            self.instance = Student()
-
-        # Si ya existe (en pasos siguientes), se reutiliza la misma instancia.
-        # La instancia del Student (nueva o existente) se pasa como el argumento 'instance' a cada ModelForm en cada paso.
-        kwargs['instance'] = self.instance      
-        return kwargs
-
-    # Este método es invocado cuando se completan todos los pasos del wizard y el último formulario ha sido validado.
-    # form_list es una lista de todas las instancias de formulario, en orden, de cada paso del wizard. 
-    # Cada formulario en esta lista ya ha pasado su propia validación de formulario.
     def done(self, form_list, **kwargs):
-        new_student = self.instance     # Recupera la instancia del modelo Student que se ha estado construyendo        
-        
-        for form in form_list:
-            # Asegura que todos los cleaned_data de cada formulario se copian explícitamente a la instancia final
-            # Se excluye la edad porque no es un dato del modelo 'Student'.
-            for field_name, value in form.cleaned_data.items():
-                if hasattr(new_student, field_name) and field_name != 'age':
-                    setattr(new_student, field_name, value)
+        # form_list es una lista de los formularios válidos de cada paso
+        # Puedes acceder a los datos de cada paso usando get_cleaned_data_for_step()
 
+        # 1. Obtener todos los datos del estudiante 
+        student_data = {}
+        for step_name in ["personal_data", "academic_socioeconomic_data", "legal_parent_data", "relative_data"]: 
+            step_data = self.get_cleaned_data_for_step(step_name)
+            if step_data: 
+                student_data.update(step_data)
+    
+        # 2. Eliminar 'age' si existe en los datos recolectados ya que ese dato era solo lectura, no está en el modelo
+        # Se debe hacer DESPUÉS de recopilar todos los datos, pero ANTES de crear el Student.
+        if 'age' in student_data:
+            del student_data['age']
+
+
+        # 3. Obtener los datos del detalle de inscripción 
+        detail_inscription_data = self.get_cleaned_data_for_step("inscription_data")
+
+        # 4. Intentar crear AMBOS objetos dentro de un único bloque try-except para manejar la dependencia.
+        student_instance = None 
+        
         try:
-            new_student.full_clean()   # Crítico. ejecuta todas las validaciones definidas a nivel del modelo 
-            new_student.save()
-            
-            return redirect(reverse('students:list'))
-            
+            #5. Crear la instancia del estudiante
+            student_instance = Student.objects.create(**student_data)
+
+            #6. Crear la instancia de DetailAcademicInscription SY Y SOLO SI el Student fue creado con éxito
+            if detail_inscription_data:
+                DetailAcademicInscription.objects.create(id_student=student_instance, **detail_inscription_data)
+
+        # Este bloque captura errores tanto de la creación del estudiante como de la inscripción.        
         except Exception as e:
-            print(f"Error saving student: {e}")
+            
+            print(f"Error during student or inscription creation: {e}")
             import traceback
-            traceback.print_exc() # For detailed debugging
-            # Falta definir cómo gestionar el error
-            return render(self.request, 'students/error_saving_student.html', {'error': str(e), 'data': new_student.__dict__})
+            traceback.print_exc() # Para depuración detallada
+
+            # Opcional: Si el estudiante se creó pero falló la inscripción,
+            # se puede implementar más adelante una distinción en el mensaje de error.
+            return render(self.request, 'students/error_saving_student.html', {'error': str(e), 'data': str(e)})
+
+        # Opcional: limpiar los datos del wizard de la sesión/cookies
+        self.storage.reset()        
+
+        # 7. Redirigir a una página de éxito
+        return redirect(reverse('students:list'))
 
 @login_required
 def list(request):

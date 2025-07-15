@@ -1,0 +1,79 @@
+{% extends 'wizard_base.html' %}
+{% load static %}        
+
+{% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
+{% block current_page %}Inscribir nuevo alumno{% endblock %}
+
+{% block wizard_title %}Detalles de la Inscripción{% endblock %} 
+
+{% block wizard_form_content  %}      
+
+    {# Campos específicos del Paso 1 #}
+    
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.id_orchestral_project.label_tag }}
+            {{ wizard.form.id_orchestral_project }}
+            {% if wizard.form.id_orchestral_project.help_text %}<p class="helptext">{{ wizard.form.id_orchestral_project.help_text }}</p>{% endif %}
+            {% if wizard.form.id_orchestral_project.errors %}<ul class="errorlist">{% for error in wizard.form.id_orchestral_project.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.id_instrument.label_tag }}
+            {{ wizard.form.id_instrument }}
+            {% if wizard.form.id_instrument.help_text %}<p class="helptext">{{ wizard.form.id_instrument.help_text }}</p>{% endif %}
+            {% if wizard.form.id_instrument.errors %}<ul class="errorlist">{% for error in wizard.form.id_instrument.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.type.label_tag }}
+            {{ wizard.form.type }}
+            {% if wizard.form.type.help_text %}<p class="helptext">{{ wizard.form.type.help_text }}</p>{% endif %}
+            {% if wizard.form.type.errors %}<ul class="errorlist">{% for error in wizard.form.type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.id_academic_period.label_tag }}
+            {{ wizard.form.id_academic_period }}
+            {% if wizard.form.id_academic_period.help_text %}<p class="helptext">{{ wizard.form.id_academic_period.help_text }}</p>{% endif %}
+            {% if wizard.form.id_academic_period.errors %}<ul class="errorlist">{% for error in wizard.form.id_academic_period.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="sm:col-span-3 form-group">
+            {{ wizard.form.inscription_date.label_tag }}
+            {{ wizard.form.inscription_date }}
+            {% if wizard.form.inscription_date.help_text %}<p class="helptext">{{ wizard.form.inscription_date.help_text }}</p>{% endif %}
+            {% if wizard.form.inscription_date.errors %}<ul class="errorlist">{% for error in wizard.form.inscription_date.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+    
+
+{% endblock %}
+
+{% block wizard_extra_js  %}
+    {# JS para el cálculo de la edad #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bornDateInput = document.getElementById('id_personal_data-born_date');
+            const ageInput = document.getElementById('id_personal_data-age');
+
+            if (bornDateInput && ageInput) {
+                bornDateInput.addEventListener('change', function() {
+                    const bornDateStr = this.value; // Formato YYYY-MM-DD
+                    if (bornDateStr) {
+                        const bornDate = new Date(bornDateStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - bornDate.getFullYear();
+                        const m = today.getMonth() - bornDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < bornDate.getDate())) {
+                            age--;
+                        }
+                        ageInput.value = age;
+                    } else {
+                        ageInput.value = ''; // Limpiar si la fecha de nacimiento se borra
+                    }
+                });
+            }
+        });
+    </script>
+    
+{% endblock %}

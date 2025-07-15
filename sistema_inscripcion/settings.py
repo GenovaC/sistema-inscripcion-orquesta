@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'instruments',
     'students',
     'orchestral_projects',
+    'academic_period',
     'tailwind',
     'theme', # Esta app es de Tailwind
     'formtools'

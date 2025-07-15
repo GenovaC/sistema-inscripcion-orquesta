@@ -92,6 +92,31 @@
         </div>
     </div>
 
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.allergies.label_tag }}
+            {{ wizard.form.allergies }}
+            {% if wizard.form.allergies.help_text %}<p class="helptext">{{ wizard.form.allergies.help_text }}</p>{% endif %}
+            {% if wizard.form.allergies.errors %}<ul class="errorlist">{% for error in wizard.form.allergies.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.regular_medical_treatment.label_tag }}
+            {{ wizard.form.regular_medical_treatment }}
+            {% if wizard.form.regular_medical_treatment.help_text %}<p class="helptext">{{ wizard.form.regular_medical_treatment.help_text }}</p>{% endif %}
+            {% if wizard.form.regular_medical_treatment.errors %}<ul class="errorlist">{% for error in wizard.form.regular_medical_treatment.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-full form-group">
+            {{ wizard.form.medical_report.label_tag }}
+            {{ wizard.form.medical_report }}
+            {% if wizard.form.medical_report.help_text %}<p class="helptext">{{ wizard.form.medical_report.help_text }}</p>{% endif %}
+            {% if wizard.form.medical_report.errors %}<ul class="errorlist">{% for error in wizard.form.regular_medical_treatment.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block wizard_extra_js  %}
