@@ -4,160 +4,411 @@
 {% block title %}Detalle Estudiante - El Sistema Guayana{% endblock %}
 {% block current_page %}Detalle de Estudiante{% endblock %}
 
+{% block extra_head %}
+    {{ block.super }}
+    <style>
+        /* Estilos básicos para las pestañas */
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem; /* mb-6 */
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .tab-button {
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            font-weight: 500; /* font-medium */
+            color: #6b7280; /* gray-500 */
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        }
+        .tab-button:hover {
+            color: #4b5563; /* gray-700 */
+            border-color: #d1d5db; /* gray-300 */
+        }
+        .tab-button.active {
+            color: #4f46e5; /* indigo-600 */
+            border-color: #4f46e5; /* indigo-600 */
+        }
+        .tab-content {
+            display: none; /* Oculta por defecto */
+        }
+        .tab-content.active {
+            display: block; /* Muestra el contenido activo */
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     <div class="max-w-4xl mx-auto bg-white/50 shadow-lg rounded-lg p-8 mt-4">
         <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            Datos Personales
+            Detalle del Estudiante
         </h2>
 
-        <div class="space-y-6">
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Nombres:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.names }}</p>
-                </div>
-                
-                <div class="sm:col-span-3">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Apellidos:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.lastnames }}</p>
-                </div>
-                
-            </div>
+        {# Contenedor de pestañas #}
+        <div class="tabs" role="tablist" aria-label="Información del Estudiante">
+            <button id="tab-personal" class="tab-button active" role="tab" aria-controls="panel-personal" aria-selected="true" onclick="showTab('personal')">
+                Datos Personales
+            </button>
+            <button id="tab-academic-socio" class="tab-button" role="tab" aria-controls="panel-academic-socio" aria-selected="false" onclick="showTab('academic-socio')">
+                Datos Académicos y Socioeconómicos
+            </button>
+            <button id="tab-family" class="tab-button" role="tab" aria-controls="panel-family" aria-selected="false" onclick="showTab('family')">
+                Datos de Representantes
+            </button>
+            {# Puedes añadir más pestañas aquí si es necesario #}
+        </div>
 
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.born_date|date:"d/m/Y" }}</p>
+        {# Contenido de las pestañas #}
+        <div id="panel-personal" class="tab-content active" role="tabpanel" aria-labelledby="tab-personal">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Información Personal</h3>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Nombres:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.names }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Apellidos:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.lastnames }}</p>
+                    </div>                    
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Género:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.get_gender_display }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-3">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.calculated_age }}</p>
-                </div>
-                
-            </div>
 
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Nacionalidad:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.get_nationality_display }}</p>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.nationality }} - {{ student.document_id }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.born_date|date:"d/m/Y" }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.calculated_age }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.document_id }}</p>
-                </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Género:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.get_gender_display }}</p>
-                </div>
-                
-            </div>
 
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.home_phone }}</p>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.home_phone }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.cellphone }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Correo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.email }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.cellphone }}</p>
-                </div>
-                
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Correo:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.email }}</p>
-                </div>
-            </div>
-            
 
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-full">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Dirección:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.address }}</p>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-full">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Dirección de Habitación:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.address }}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Alergias:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.allergies %}
+                                {{ student.allergies }}
+                            {% else %}
+                                Ninguna reportada.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Tratamiento médico regular:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.regular_medical_treatment %}
+                                {{ student.regular_medical_treatment }}
+                            {% else %}
+                                Ninguno.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Presenta informe médicos:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.medical_report %}
+                                {{ student.medical_report }}
+                            {% else %}
+                                Ninguno.
+                            {% endif %}                        
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <br>
-
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            Datos Académicos
-        </h2>
-
-        <div class="space-y-6">
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Nombres del Plantel Educativo:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_name }}</p>
+        <div id="panel-academic-socio" class="tab-content" role="tabpanel" aria-labelledby="tab-academic-socio">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Información Académica</h3>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Nombres del Plantel Educativo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_name }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Grado / Año:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.academic_degree }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Tipo de institución:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_type }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Grado / Año:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_degree }}</p>
-                </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Tipo de institución:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_type }}</p>
-                </div>
-            </div>
-
-            
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-full">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Dirección del plantel:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_address }}</p>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-full">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Dirección del plantel:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.academic_institution_address }}</p>
+                    </div>
                 </div>
             </div>
 
+            <br>
+            <hr class="my-8 border-gray-300"> {# Separador visual entre secciones #}
+            <br>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Información Socioeconómica</h3>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Tipo de Vivienda:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.housing_type }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Condición de la Vivienda:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.housing_condition }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Personas viviendo en el hogar:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.number_people_living_housing }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <br>
+        <div id="panel-family" class="tab-content" role="tabpanel" aria-labelledby="tab-family">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Datos del Representante Legal</h3>
 
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            Datos Socioeconómicos
-        </h2>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Nombre completo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.fullname_legal_parent }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Parentesco:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.lastnames }}</p>
+                    </div>                    
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Estado Civil:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.get_marital_status_legal_parent_display }}</p>
+                    </div>
+                </div>
 
-        <div class="space-y-6">
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Tipo de Vivienda:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.housing_type }}</p>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.nationality_id_legal_parent }} - {{ student.document_id_legal_parent }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.born_date_legal_parent|date:"d/m/Y" }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.age_legal_parent }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Condición de la Vivienda:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.housing_condition }}</p>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.home_phone_legal_parent %}
+                                {{ student.home_phone_legal_parent }}
+                            {% else %}
+                                Mismo del beneficiario.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.cellphone_legal_parent }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Correo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.email_legal_parent }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Personas viviendo en el hogar:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.number_people_living_housing }}</p>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-full">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Dirección de Habitación:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.address_legal_parent %}
+                                {{ student.address_legal_parent }}
+                            {% else %}
+                                Misma del beneficiario.
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
+
+                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Profesión u Oficio:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.profession_legal_parent }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Lugar de Trabajo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.workplace_legal_parent }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Cargo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.job_title_legal_parent }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Oficina:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.office_phone_legal_parent }}</p>
+                    </div>
+                </div>
+
             </div>
 
-        </div>
-        
-        <br>
+            <br>
+            <hr class="my-8 border-gray-300"> {# Separador visual entre secciones #}
+            <br>
 
-        <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">
-            Datos Médicos
-        </h2>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Datos de Otro familiar</h3>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Nombre completo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.fullname_relative }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Parentesco:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.relationship_relative }}</p>
+                    </div>                    
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Estado Civil:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.get_marital_status_relative_display }}</p>
+                    </div>
+                </div>
 
-        <div class="space-y-6">
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Alergias:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.allergies }}</p>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.nationality_id_relative }} - {{ student.document_id_relative }}</p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.born_date_relative|date:"d/m/Y" }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.age_relative }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Tratamiento médico regular:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.regular_medical_treatment }}</p>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.home_phone_relative %}
+                                {{ student.home_phone_relative }}
+                            {% else %}
+                                Mismo del beneficiario.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.cellphone_relative }}</p>
+                    </div>
                 </div>
-                <div class="sm:col-span-2">
-                    <p class="block text-sm font-medium leading-6 text-gray-900">Presenta informe médicos:</p>
-                    <p class="mt-1 text-sm text-gray-700">{{ student.medical_report }}</p>
+
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-full">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Dirección de Habitación:</p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {% if student.address_relative %}
+                                {{ student.address_relative }}
+                            {% else %}
+                                Misma del beneficiario.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Profesión u Oficio:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.profession_relative }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Lugar de Trabajo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.workplace_relative }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Cargo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.job_title_relative }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Oficina:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ student.office_phone_relative }}</p>
+                    </div>
                 </div>
             </div>
-
         </div>
 
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script>
+        function showTab(tabId) {
+            // Oculta todos los contenidos de las pestañas
+            document.querySelectorAll('.tab-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            // Desactiva todos los botones de las pestañas
+            document.querySelectorAll('.tab-button').forEach(function(button) {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+
+            // Muestra el contenido de la pestaña seleccionada
+            const selectedContent = document.getElementById('panel-' + tabId);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+                selectedContent.setAttribute('aria-hidden', 'false');
+            }
+
+            // Activa el botón de la pestaña seleccionada
+            const selectedButton = document.getElementById('tab-' + tabId);
+            if (selectedButton) {
+                selectedButton.classList.add('active');
+                selectedButton.setAttribute('aria-selected', 'true');
+            }
+        }
+
+        // Mostrar la primera pestaña por defecto al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('personal');
+        });
+    </script>
 {% endblock %}
