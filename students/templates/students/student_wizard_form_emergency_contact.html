@@ -1,0 +1,39 @@
+{% extends 'wizard_base.html' %}
+{% load static %}        
+
+{% block title %}Nueva Inscripción - El Sistema Guayana{% endblock %}
+{% block current_page %}Inscribir nuevo alumno{% endblock %}
+
+{% block wizard_title %}Contactos de Emergencia{% endblock %} 
+
+{% block wizard_form_content  %}     
+
+    {# Esto es para el formset. "It renders hidden fields Django needs to manage the forms" #}
+    {{ wizard.form.management_form }}
+
+    {# Iterate over each form in the formset #}
+    {% for form in wizard.form %}
+        <h3 class="text-lg font-semibold leading-7 text-gray-900 mt-8">Contacto de Emergencia {{ forloop.counter }}</h3>
+        <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border p-4 rounded-lg mt-2">
+            <div class="sm:col-span-2 form-group">
+                {{ form.fullname.label_tag }}
+                {{ form.fullname }}
+                {% if form.fullname.help_text %}<p class="helptext">{{ form.fullname.help_text }}</p>{% endif %}
+                {% if form.fullname.errors %}<ul class="errorlist">{% for error in form.fullname.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="sm:col-span-2 form-group">
+                {{ form.relationship.label_tag }}
+                {{ form.relationship }}
+                {% if form.relationship.help_text %}<p class="helptext">{{ form.relationship.help_text }}</p>{% endif %}
+                {% if form.relationship.errors %}<ul class="errorlist">{% for error in form.relationship.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            <div class="sm:col-span-2 form-group">
+                {{ form.cellphone.label_tag }}
+                {{ form.cellphone }}
+                {% if form.cellphone.help_text %}<p class="helptext">{{ form.cellphone.help_text }}</p>{% endif %}
+                {% if form.cellphone.errors %}<ul class="errorlist">{% for error in form.cellphone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

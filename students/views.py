@@ -2,15 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import SessionWizardView
-from .models import Student
+from .models import Student, EmergencyContact
 from academic_period.models import DetailAcademicInscription, AcademicPeriod
 from instruments.models import Instrument
 from orchestral_projects.models import OrchestralProject
-from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, RelativeDataForm
+from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, RelativeDataForm, EmergencyContactForm, EmergencyContactFormSet 
 from academic_period.forms import DetailAcademicInscriptionForm
 from datetime import date
 
 FORMS = [
+    ("emergency_contact", EmergencyContactFormSet),
     ("inscription_data", DetailAcademicInscriptionForm),
     ("personal_data", PersonalDataForm),
     ("legal_parent_data", LegalParentDataForm),
@@ -19,6 +20,7 @@ FORMS = [
 ]
 
 TEMPLATES = {
+    "emergency_contact": "students/student_wizard_form_emergency_contact.html",
     "inscription_data": "students/student_wizard_form_inscription_data.html",
     "personal_data": "students/student_wizard_form_personal_data.html",
     "academic_socioeconomic_data": "students/student_wizard_form_academic_data.html",
@@ -43,7 +45,7 @@ class StudentWizard(SessionWizardView):
             # form.fields['id_instrument'].queryset = Instrument.objects.order_by('name')
             # form.fields['id_academic_period'].queryset = AcademicPeriod.objects.filter(is_current=True)
 
-            # Actualmente solo se obtieenn todos los objetos.
+            # Actualmente solo se obtienen todos los objetos.
             form.fields['id_orchestral_project'].queryset = OrchestralProject.objects.all()
             form.fields['id_instrument'].queryset         = Instrument.objects.all()
             form.fields['id_academic_period'].queryset    = AcademicPeriod.objects.all()
@@ -59,7 +61,8 @@ class StudentWizard(SessionWizardView):
             'personal_data':               'Datos Personales',
             'academic_socioeconomic_data': 'Datos Académicos y Socioeconómicos',
             'legal_parent_data':           'Representante Legal',
-            'relative_data':                'Otro familiar'
+            'relative_data':               'Otro familiar',
+            'emergency_contact':           'Contactos de Emergencia' 
         }
         return context
     
@@ -79,9 +82,10 @@ class StudentWizard(SessionWizardView):
         if 'age' in student_data:
             del student_data['age']
 
-
-        # 3. Obtener los datos del detalle de inscripción 
+        # 3. Obtener los datos del detalle de inscripción y contactos de emergencia
         detail_inscription_data = self.get_cleaned_data_for_step("inscription_data")
+        # emergency_contacts es una lista de diccionarios si el formset es válido
+        emergency_contacts_data_list = self.get_cleaned_data_for_step("emergency_contact")
 
         # 4. Intentar crear AMBOS objetos dentro de un único bloque try-except para manejar la dependencia.
         student_instance = None 
@@ -93,6 +97,15 @@ class StudentWizard(SessionWizardView):
             #6. Crear la instancia de DetailAcademicInscription SY Y SOLO SI el Student fue creado con éxito
             if detail_inscription_data:
                 DetailAcademicInscription.objects.create(id_student=student_instance, **detail_inscription_data)
+                
+                # 6.1 Crear cada contacto de emergencia asociado al estudiante
+                if emergency_contacts_data_list: # Confirmar que hay data
+                    for contact_data in emergency_contacts_data_list:
+                        # Only create if the form data is not empty (e.g., all fields were filled)
+                        # This check is important if you allow less than 3 forms to be submitted (e.g., extra=3, min_num=0)
+                        # With min_num=3, all 3 forms are expected to have data if valid.
+                        if any(contact_data.values()): # Check if any value in the dict is not empty/None
+                            EmergencyContact.objects.create(id_student=student_instance, **contact_data)
 
         # Este bloque captura errores tanto de la creación del estudiante como de la inscripción.        
         except Exception as e:

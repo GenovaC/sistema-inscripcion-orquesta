@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Student
+from .models import Student, EmergencyContact
 from django.core.exceptions import ValidationError
+from django.forms import formset_factory
 from django.utils import timezone
 import re
 
@@ -489,3 +490,44 @@ class RelativeDataForm(forms.ModelForm):
         if office_phone_relative and not re.fullmatch(r'^\d{11}$', office_phone_relative):
             raise ValidationError('El número de celular debe tener 11 dígitos.')
         return office_phone_relative
+    
+
+class EmergencyContactForm(forms.ModelForm):
+    class Meta:
+        model = EmergencyContact
+        fields = [ 'fullname', 'relationship', 'cellphone']
+        
+        labels = {
+            'fullname':     'Nombre Completo',
+            'relationship': 'Parentesco',
+            'cellphone':    'Teléfono'
+        }
+        help_texts = {
+            'fullname':     'Ingrese el nombre completo del contacto de emergencia',
+            'relationship': 'Ingrese el parentesco',
+            'cellphone':    'Ingrese solo números sin guiones ni espacios'
+        }
+        widgets = {
+            'fullname': forms.TextInput(attrs={
+                'placeholder': 'Ej: Nombre completo',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),
+            'relationship': forms.TextInput(attrs={
+                'placeholder': 'Ej: Abuelo',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),
+            'cellphone': forms.TextInput(attrs={
+                'placeholder': 'Ej: 04120000000',
+                'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            })
+        }
+
+    def cellphone(self):
+        cellphone = self.cleaned_data.get('cellphone')
+        if cellphone and not re.fullmatch(r'^\d{11}$', cellphone):
+            raise ValidationError('El número de teléfono debe tener 11 dígitos.')
+        return cellphone
+
+
+# Create a formset for 3 emergency contacts
+EmergencyContactFormSet = formset_factory(EmergencyContactForm, extra=0, min_num=3, validate_min=True)
