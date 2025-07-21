@@ -82,7 +82,7 @@ class DetailAcademicInscriptionForm(forms.ModelForm):
 
     def clean_inscription_date(self):
         inscription_date = self.cleaned_data.get('inscription_date')
-        if inscription_date > timezone.now().date():
+        if inscription_date and inscription_date > timezone.now().date():
             raise ValidationError("La fecha de inscripción no puede ser futura.")
         return inscription_date
   

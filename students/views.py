@@ -11,12 +11,12 @@ from academic_period.forms import DetailAcademicInscriptionForm
 from datetime import date
 
 FORMS = [
-    ("emergency_contact", EmergencyContactFormSet),
     ("inscription_data", DetailAcademicInscriptionForm),
     ("personal_data", PersonalDataForm),
     ("legal_parent_data", LegalParentDataForm),
     ("relative_data", RelativeDataForm),
     ("academic_socioeconomic_data", AcademicSocioeconomicDataForm),
+    ("emergency_contact", EmergencyContactFormSet)
 ]
 
 TEMPLATES = {
@@ -59,7 +59,7 @@ class StudentWizard(SessionWizardView):
         context['step_titles'] = {
             'inscription_data':            'Datos de Inscripción',
             'personal_data':               'Datos Personales',
-            'academic_socioeconomic_data': 'Datos Académicos y Socioeconómicos',
+            'academic_socioeconomic_data': 'Datos Públicos',
             'legal_parent_data':           'Representante Legal',
             'relative_data':               'Otro familiar',
             'emergency_contact':           'Contactos de Emergencia' 

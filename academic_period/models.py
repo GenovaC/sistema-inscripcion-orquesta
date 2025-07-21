@@ -45,12 +45,12 @@ class DetailAcademicInscription(models.Model):
         super().clean()
         
         # Validación: fecha no puede ser futura
-        if self.inscription_date > timezone.now().date():
-            raise ValidationError("La fecha de inscripción no puede ser futura.")
+        if self.inscription_date and self.inscription_date > timezone.now().date():
+            raise ValidationError({'inscription_date': 'La inscripción no puede ser futura y debe ser una fecha válida.'})
         
         # Validación: tipo debe estar en las opciones (redundante si usas choices)
         if self.type not in dict(self.TYPE_CHOICES):
-            raise ValidationError("Tipo de inscripción inválido.")
+            raise ValidationError({'type': 'Tipo de inscripción inválido.'})
 
     def __str__(self):
         return f"{self.id_student} - {self.id_academic_period} ({self.type})"
