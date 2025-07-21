@@ -9,7 +9,7 @@
 {% block wizard_form_content  %}      
 
     {# Campos específicos del Paso 1 #}
-    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
         <div class="sm:col-span-2 form-group">
             {{ wizard.form.names.label_tag }}
             {{ wizard.form.names }}
@@ -22,6 +22,12 @@
             {{ wizard.form.lastnames }}
             {% if wizard.form.lastnames.help_text %}<p class="helptext">{{ wizard.form.lastnames.help_text }}</p>{% endif %}
             {% if wizard.form.lastnames.errors %}<ul class="errorlist">{% for error in wizard.form.lastnames.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+
+        <div class="sm:col-span-2 form-group">
+            {{ wizard.form.has_document_id.label_tag }}
+            {{ wizard.form.has_document_id }}
+            {% if wizard.form.has_document_id.errors %}<ul class="errorlist">{% for error in wizard.form.has_document_id.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         
         <div class="sm:col-span-2 form-group">

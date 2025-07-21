@@ -21,11 +21,12 @@ class PersonalDataForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = [
-            'document_id', 'nationality', 'names', 'lastnames', 'born_date',
+            'document_id', 'has_document_id', 'nationality', 'names', 'lastnames', 'born_date',
             'gender', 'address', 'home_phone', 'cellphone', 'email', 'allergies', 'regular_medical_treatment', 'medical_report'
         ]
         labels = {
             'document_id':               'Cédula/Pasaporte',
+            'has_document_id':           '¿Tiene Documento de Identidad?',       
             'nationality':               'Nacionalidad',
             'names':                     'Nombres',
             'lastnames':                 'Apellidos',
@@ -41,6 +42,7 @@ class PersonalDataForm(forms.ModelForm):
         }
         help_texts = {
             'document_id':                  'Cédula del estudiante sin puntos ni espacios.',
+            'has_document_id':              'Marque si el estudiante tiene documento de identidad',    
             'nationality':                  'Venezolano (V) o Extranjero (E).',
             'names':                        'Máximo 30 caracteres.',
             'lastnames':                    'Máximo 30 caracteres.',
@@ -58,6 +60,9 @@ class PersonalDataForm(forms.ModelForm):
             'document_id': forms.TextInput(attrs={
                 'placeholder': 'Ej: 1234567',
                 'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
+            }),
+            'has_document_id': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
             }),
             'nationality': forms.Select(attrs={
                 'class': 'block w-full rounded-md border-1 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-3 focus:ring-inset focus:ring-indigo-400 sm:text-sm sm:leading-6'
@@ -119,11 +124,33 @@ class PersonalDataForm(forms.ModelForm):
             age = today.year - self.instance.born_date.year - ((today.month, today.day) < (self.instance.born_date.month, self.instance.born_date.day))
             self.fields['age'].initial = age # Asigna la edad calculada al campo 'age'
 
-    def clean_document_id(self):
-        document_id = self.cleaned_data.get('document_id')
-        if not (3 <= len(document_id) <= 8):
-            raise ValidationError('El ID del documento debe tener entre 3 y 8 caracteres.')
-        return document_id
+    #  --- lógica para document_id y has_document_id (en el clean() general) ---
+    def clean(self):
+        cleaned_data = super().clean() # <--- LLAMA AL CLEAN ORIGINAL
+        
+        document_id = cleaned_data.get('document_id')
+        has_document_id = cleaned_data.get('has_document_id') 
+
+        if has_document_id:
+            if not document_id:
+                raise ValidationError('Debe ingresar la cédula o pasaporte del estudiante si marcó que tiene uno.')
+            elif document_id.upper() == 'N/A':
+                raise ValidationError('El documento de identidad no puede ser N/A si marcó que el estudiante tiene uno.')
+            else: # Verificar unicidad si tiene Cédula y no es 'N/A'
+                # Excluye el estudiante actual si estás en un formulario de edición
+                # Para un formulario de creación, esto simplemente busca si existe otro
+                if self.instance and self.instance.pk: # Si es un formulario de edición
+                    if Student.objects.filter(document_id=document_id).exclude(pk=self.instance.pk).exists():
+                        raise ValidationError('Ya existe un estudiante con este número de documento. Debe ser único.')
+                else:  # Si es un formulario de creación
+                    if Student.objects.filter(document_id=document_id).exists():
+                        raise ValidationError('Ya existe un estudiante con este número de documento.')
+                    elif not (7 <= len(document_id) <= 8):
+                        raise ValidationError('La cédula no cumple con el formato esperado.')
+        else:
+            cleaned_data['document_id'] = 'N/A'
+            
+        return cleaned_data # Siempre devuelve los datos limpios    
 
     def clean_born_date(self):
         born_date = self.cleaned_data.get('born_date')

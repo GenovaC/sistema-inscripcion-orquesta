@@ -11,8 +11,8 @@ from academic_period.forms import DetailAcademicInscriptionForm
 from datetime import date
 
 FORMS = [
-    ("inscription_data", DetailAcademicInscriptionForm),
     ("personal_data", PersonalDataForm),
+    ("inscription_data", DetailAcademicInscriptionForm),
     ("legal_parent_data", LegalParentDataForm),
     ("relative_data", RelativeDataForm),
     ("academic_socioeconomic_data", AcademicSocioeconomicDataForm),
@@ -66,6 +66,21 @@ class StudentWizard(SessionWizardView):
         }
         return context
     
+    def render_next_step(self, form):
+        # self.storage.data contiene todos los datos limpios de los pasos anteriores
+        # y también información sobre el paso actual y el siguiente.
+        
+        # Acceder a los datos de los pasos ya completados
+        all_collected_data = self.storage.data.get('step_data', {})
+        print("\n--- Datos Recopilados al Pasar al Siguiente Paso ---")
+        for step_name, cleaned_data_dict in all_collected_data.items(): # <--- CAMBIO AQUÍ
+            # cleaned_data_dict es directamente el diccionario de datos
+            print(f"Paso: {step_name}")
+            print(f"  Datos: {cleaned_data_dict}") # <--- CAMBIO AQUÍ
+        print("---------------------------------------------------\n")
+        
+        return super().render_next_step(form)
+
     def done(self, form_list, **kwargs):
         # form_list es una lista de los formularios válidos de cada paso
         # Puedes acceder a los datos de cada paso usando get_cleaned_data_for_step()

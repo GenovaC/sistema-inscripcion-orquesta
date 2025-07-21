@@ -23,16 +23,25 @@ class Student(models.Model):
     ]
 
     ############ Datos personales del BENEFICIARIO
+
+    # lógica del DNI: Si tiene, debe ser única. Si no tiene, debe tener valor N/A.
     document_id = models.CharField(
         max_length=8,
-        unique=True,  # Asumiendo que el document_id debe ser único
+        blank=True,
         help_text="Cédula o Pasaporte del estudiante."
     )
+
+    has_document_id = models.BooleanField(
+        default=True,
+        help_text="Marque si el estudiante posee cédula o pasaporte."
+    )
+
     nationality = models.CharField(
         max_length=1,
         choices=DOCUMENT_TYPE_CHOICES,
         help_text="Nacionalidad del estudiante ('V' para Venezolano, 'E' para Extranjero)."
     )
+
     names = models.CharField(
         max_length=30,
         help_text="Nombres del estudiante."
