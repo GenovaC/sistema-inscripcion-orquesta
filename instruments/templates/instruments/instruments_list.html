@@ -12,8 +12,8 @@
 
         <div class="flex flex-col md:flex-row md:items-end md:space-x-4 gap-4">
             <div class="flex-1 min-w-0"> {# flex-1 permite que el item crezca, min-w-0 para evitar desbordamiento #}
-                <label for="{{ form.code.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Código referencial de la cátedra</label>
-                {{ form.code }}
+                <label for="{{ form.category.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
+                {{ form.category }}
             </div>
 
             <div class="flex-1 min-w-0">
@@ -23,7 +23,7 @@
 
             {# Botón #}
             <div class="self-end md:self-auto"> {# self-end para alinear el botón con la base de los inputs en móviles, md:self-auto para deshabilitarlo en md #}
-                <button type="submit" class="w-full md:w-auto text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Registrar nuevo instrumento</button>
+                <button type="submit" class="w-full md:w-auto text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Registrar nueva cátedra</button>
             </div>
 
             {% if form.errors %} 
@@ -46,7 +46,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50/60"> {# También puedes hacer el thead semitransparente #}
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre de la cátedra</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad de Alumnos inscritos</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opciones</th>
@@ -55,7 +55,7 @@
             <tbody class="bg-white/60 divide-y divide-gray-200"> {# Y el tbody un poco menos opaco #}
                 {% for i in instruments %}
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{i.code}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{i.get_category_display}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{i.name}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">[Ver], [Editar], [Eliminar] </td>

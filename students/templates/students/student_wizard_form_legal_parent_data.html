@@ -8,114 +8,113 @@
 
 {% block wizard_form_content  %}     
 
-    {# Campos específicos del Paso 3 #}
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.relationship_legal_parent.label_tag }}
-            {{ wizard.form.relationship_legal_parent }}
-            {% if wizard.form.relationship_legal_parent.help_text %}<p class="helptext">{{ wizard.form.relationship_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.relationship_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.relationship_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.relationship.label_tag }}
+            {{ wizard.form.relationship }}
+            {% if wizard.form.relationship.help_text %}<p class="helptext">{{ wizard.form.relationship.help_text }}</p>{% endif %}
+            {% if wizard.form.relationship.errors %}<ul class="errorlist">{% for error in wizard.form.relationship.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.nationality_id_legal_parent.label_tag }}
-            {{ wizard.form.nationality_id_legal_parent }}
-            {% if wizard.form.nationality_id_legal_parent.help_text %}<p class="helptext">{{ wizard.form.nationality_id_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.nationality_id_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.nationality_id_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.nationality.label_tag }}
+            {{ wizard.form.nationality }}
+            {% if wizard.form.nationality.help_text %}<p class="helptext">{{ wizard.form.nationality.help_text }}</p>{% endif %}
+            {% if wizard.form.nationality.errors %}<ul class="errorlist">{% for error in wizard.form.nationality.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.document_id_legal_parent.label_tag }}
-            {{ wizard.form.document_id_legal_parent }}
-            {% if wizard.form.document_id_legal_parent.help_text %}<p class="helptext">{{ wizard.form.document_id_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.document_id_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.document_id_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.document_id.label_tag }}
+            {{ wizard.form.document_id }}
+            {% if wizard.form.document_id.help_text %}<p class="helptext">{{ wizard.form.document_id.help_text }}</p>{% endif %}
+            {% if wizard.form.document_id.errors %}<ul class="errorlist">{% for error in wizard.form.document_id.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
     </div>
 
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.fullname_legal_parent.label_tag }}
-            {{ wizard.form.fullname_legal_parent }}
-            {% if wizard.form.fullname_legal_parent.help_text %}<p class="helptext">{{ wizard.form.fullname_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.fullname_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.fullname_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.fullname.label_tag }}
+            {{ wizard.form.fullname }}
+            {% if wizard.form.fullname.help_text %}<p class="helptext">{{ wizard.form.fullname.help_text }}</p>{% endif %}
+            {% if wizard.form.fullname.errors %}<ul class="errorlist">{% for error in wizard.form.fullname.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.born_date_legal_parent.label_tag }}
-            {{ wizard.form.born_date_legal_parent }}
-            {% if wizard.form.born_date_legal_parent.help_text %}<p class="helptext">{{ wizard.form.born_date_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.born_date_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.born_date_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.born_date.label_tag }}
+            {{ wizard.form.born_date }}
+            {% if wizard.form.born_date.help_text %}<p class="helptext">{{ wizard.form.born_date.help_text }}</p>{% endif %}
+            {% if wizard.form.born_date.errors %}<ul class="errorlist">{% for error in wizard.form.born_date.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         
         <div class="sm:col-span-2 form-group">                    
-            {# El campo 'age_legal_parent' es de solo lectura, no debería tener errores de validación de usuario #}
-            {{ wizard.form.age_legal_parent.label_tag }}
-            {{ wizard.form.age_legal_parent }}
-            {% if wizard.form.age_legal_parent.help_text %}<p class="helptext">{{ wizard.form.age_legal_parent.help_text }}</p>{% endif %}
+            {# El campo 'age' es de solo lectura, no debería tener errores de validación de usuario #}
+            {{ wizard.form.age.label_tag }}
+            {{ wizard.form.age }}
+            {% if wizard.form.age.help_text %}<p class="helptext">{{ wizard.form.age.help_text }}</p>{% endif %}
         </div>
     </div>
 
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
         <div class="sm:col-span-3 form-group">
-            {{ wizard.form.marital_status_legal_parent.label_tag }}
-            {{ wizard.form.marital_status_legal_parent }}
-            {% if wizard.form.marital_status_legal_parent.help_text %}<p class="helptext">{{ wizard.form.marital_status_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.marital_status_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.marital_status_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.marital_status.label_tag }}
+            {{ wizard.form.marital_status }}
+            {% if wizard.form.marital_status.help_text %}<p class="helptext">{{ wizard.form.marital_status.help_text }}</p>{% endif %}
+            {% if wizard.form.marital_status.errors %}<ul class="errorlist">{% for error in wizard.form.marital_status.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-3 form-group">
-            {{ wizard.form.profession_legal_parent.label_tag }}
-            {{ wizard.form.profession_legal_parent }}
-            {% if wizard.form.profession_legal_parent.help_text %}<p class="helptext">{{ wizard.form.profession_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.profession_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.profession_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.profession.label_tag }}
+            {{ wizard.form.profession }}
+            {% if wizard.form.profession.help_text %}<p class="helptext">{{ wizard.form.profession.help_text }}</p>{% endif %}
+            {% if wizard.form.profession.errors %}<ul class="errorlist">{% for error in wizard.form.profession.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
     </div>
 
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.home_phone_legal_parent.label_tag }}
-            {{ wizard.form.home_phone_legal_parent }}
-            {% if wizard.form.home_phone_legal_parent.help_text %}<p class="helptext">{{ wizard.form.home_phone_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.home_phone_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.home_phone_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.home_phone.label_tag }}
+            {{ wizard.form.home_phone }}
+            {% if wizard.form.home_phone.help_text %}<p class="helptext">{{ wizard.form.home_phone.help_text }}</p>{% endif %}
+            {% if wizard.form.home_phone.errors %}<ul class="errorlist">{% for error in wizard.form.home_phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.cellphone_legal_parent.label_tag }}
-            {{ wizard.form.cellphone_legal_parent }}
-            {% if wizard.form.cellphone_legal_parent.help_text %}<p class="helptext">{{ wizard.form.cellphone_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.cellphone_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.cellphone_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.cellphone.label_tag }}
+            {{ wizard.form.cellphone }}
+            {% if wizard.form.cellphone.help_text %}<p class="helptext">{{ wizard.form.cellphone.help_text }}</p>{% endif %}
+            {% if wizard.form.cellphone.errors %}<ul class="errorlist">{% for error in wizard.form.cellphone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.email_legal_parent.label_tag }}
-            {{ wizard.form.email_legal_parent }}
-            {% if wizard.form.email_legal_parent.help_text %}<p class="helptext">{{ wizard.form.email_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.email_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.email_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.email.label_tag }}
+            {{ wizard.form.email }}
+            {% if wizard.form.email.help_text %}<p class="helptext">{{ wizard.form.email.help_text }}</p>{% endif %}
+            {% if wizard.form.email.errors %}<ul class="errorlist">{% for error in wizard.form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
     </div>
 
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-full form-group">
-            {{ wizard.form.address_legal_parent.label_tag }}
-            {{ wizard.form.address_legal_parent }}
-            {% if wizard.form.address_legal_parent.help_text %}<p class="helptext">{{ wizard.form.address_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.address_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.address_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.address.label_tag }}
+            {{ wizard.form.address }}
+            {% if wizard.form.address.help_text %}<p class="helptext">{{ wizard.form.address.help_text }}</p>{% endif %}
+            {% if wizard.form.address.errors %}<ul class="errorlist">{% for error in wizard.form.address.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
     </div>
 
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">        
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.workplace_legal_parent.label_tag }}
-            {{ wizard.form.workplace_legal_parent }}
-            {% if wizard.form.workplace_legal_parent.help_text %}<p class="helptext">{{ wizard.form.workplace_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.workplace_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.workplace_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.workplace.label_tag }}
+            {{ wizard.form.workplace }}
+            {% if wizard.form.workplace.help_text %}<p class="helptext">{{ wizard.form.workplace.help_text }}</p>{% endif %}
+            {% if wizard.form.workplace.errors %}<ul class="errorlist">{% for error in wizard.form.workplace.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.job_title_legal_parent.label_tag }}
-            {{ wizard.form.job_title_legal_parent }}
-            {% if wizard.form.job_title_legal_parent.help_text %}<p class="helptext">{{ wizard.form.job_title_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.job_title_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.job_title_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.job_title.label_tag }}
+            {{ wizard.form.job_title }}
+            {% if wizard.form.job_title.help_text %}<p class="helptext">{{ wizard.form.job_title.help_text }}</p>{% endif %}
+            {% if wizard.form.job_title.errors %}<ul class="errorlist">{% for error in wizard.form.job_title.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
         <div class="sm:col-span-2 form-group">
-            {{ wizard.form.office_phone_legal_parent.label_tag }}
-            {{ wizard.form.office_phone_legal_parent }}
-            {% if wizard.form.office_phone_legal_parent.help_text %}<p class="helptext">{{ wizard.form.office_phone_legal_parent.help_text }}</p>{% endif %}
-            {% if wizard.form.office_phone_legal_parent.errors %}<ul class="errorlist">{% for error in wizard.form.office_phone_legal_parent.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            {{ wizard.form.office_phone.label_tag }}
+            {{ wizard.form.office_phone }}
+            {% if wizard.form.office_phone.help_text %}<p class="helptext">{{ wizard.form.office_phone.help_text }}</p>{% endif %}
+            {% if wizard.form.office_phone.errors %}<ul class="errorlist">{% for error in wizard.form.office_phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
         </div>
     </div>
     
@@ -126,8 +125,8 @@
     {# JS para el cálculo de la edad #}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const bornDateInput = document.getElementById('id_legal_parent_data-born_date_legal_parent');
-            const ageInput = document.getElementById('id_legal_parent_data-age_legal_parent');
+            const bornDateInput = document.getElementById('id_legal_parent_data-born_date');
+            const ageInput = document.getElementById('id_legal_parent_data-age');
 
             if (bornDateInput && ageInput) {
                 bornDateInput.addEventListener('change', function() {

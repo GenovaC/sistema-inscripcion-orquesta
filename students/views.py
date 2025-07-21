@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from formtools.wizard.views import SessionWizardView
-from .models import Student, EmergencyContact
+from .models import Student, EmergencyContact, StudentRelative
 from academic_period.models import DetailAcademicInscription, AcademicPeriod
 from instruments.models import Instrument
 from orchestral_projects.models import OrchestralProject
-from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, RelativeDataForm, EmergencyContactForm, EmergencyContactFormSet 
+from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, EmergencyContactForm, EmergencyContactFormSet 
 from academic_period.forms import DetailAcademicInscriptionForm
 from datetime import date
 
@@ -14,7 +14,7 @@ FORMS = [
     ("personal_data", PersonalDataForm),
     ("inscription_data", DetailAcademicInscriptionForm),
     ("legal_parent_data", LegalParentDataForm),
-    ("relative_data", RelativeDataForm),
+    ("relative_data", LegalParentDataForm),
     ("academic_socioeconomic_data", AcademicSocioeconomicDataForm),
     ("emergency_contact", EmergencyContactFormSet)
 ]
@@ -30,7 +30,7 @@ TEMPLATES = {
 
 class StudentWizard(SessionWizardView):
 
-    # Para determinar qué plantilla HTML se debe renderizar para el paso actual del formulario.
+    # Esta función determina qué tenplate HTML se debe renderizar para el paso actual del formulario.
     def get_template_names(self):
         return [TEMPLATES[self.steps.current]]      
     
@@ -40,7 +40,7 @@ class StudentWizard(SessionWizardView):
 
         # Si estamos en el paso de inscripción, ajustamos los querysets
         if step == 'inscription_data':
-            # Ejemplos de filtros, si llegan a ser necesarios:
+            # Ejemplos de filtros adicionales por si llegan a ser necesarios más adelante:
             # form.fields['id_orchestral_project'].queryset = OrchestralProject.objects.filter(is_active=True)
             # form.fields['id_instrument'].queryset = Instrument.objects.order_by('name')
             # form.fields['id_academic_period'].queryset = AcademicPeriod.objects.filter(is_current=True)
@@ -66,28 +66,29 @@ class StudentWizard(SessionWizardView):
         }
         return context
     
+    # Esta función es solo para imprimir en consola lo que se va recopilando al pasar cada step
     def render_next_step(self, form):
-        # self.storage.data contiene todos los datos limpios de los pasos anteriores
-        # y también información sobre el paso actual y el siguiente.
-        
+        # contiene todos los datos limpios de los pasos anteriores, también información sobre el paso actual y el siguiente.        
+
         # Acceder a los datos de los pasos ya completados
         all_collected_data = self.storage.data.get('step_data', {})
         print("\n--- Datos Recopilados al Pasar al Siguiente Paso ---")
-        for step_name, cleaned_data_dict in all_collected_data.items(): # <--- CAMBIO AQUÍ
+        for step_name, cleaned_data_dict in all_collected_data.items(): 
             # cleaned_data_dict es directamente el diccionario de datos
             print(f"Paso: {step_name}")
-            print(f"  Datos: {cleaned_data_dict}") # <--- CAMBIO AQUÍ
+            print(f"  Datos: {cleaned_data_dict}") 
         print("---------------------------------------------------\n")
         
         return super().render_next_step(form)
 
     def done(self, form_list, **kwargs):
-        # form_list es una lista de los formularios válidos de cada paso
-        # Puedes acceder a los datos de cada paso usando get_cleaned_data_for_step()
+        # form_list es una lista de los formularios válidos de cada paso, no se usa porque hay 
+        # formularios de distintas entidades por lo que se requiere un tratamiento distinto.
+        # Para acceder a los datos de cada paso se usa: get_cleaned_data_for_step()
 
         # 1. Obtener todos los datos del estudiante 
         student_data = {}
-        for step_name in ["personal_data", "academic_socioeconomic_data", "legal_parent_data", "relative_data"]: 
+        for step_name in ["personal_data", "academic_socioeconomic_data"]: 
             step_data = self.get_cleaned_data_for_step(step_name)
             if step_data: 
                 student_data.update(step_data)
@@ -97,35 +98,49 @@ class StudentWizard(SessionWizardView):
         if 'age' in student_data:
             del student_data['age']
 
-        # 3. Obtener los datos del detalle de inscripción y contactos de emergencia
+        # 3. Obtener los datos del detalle de inscripción, familiares y contactos de emergencia
         detail_inscription_data = self.get_cleaned_data_for_step("inscription_data")
-        # emergency_contacts es una lista de diccionarios si el formset es válido
-        emergency_contacts_data_list = self.get_cleaned_data_for_step("emergency_contact")
 
-        # 4. Intentar crear AMBOS objetos dentro de un único bloque try-except para manejar la dependencia.
+        legal_parent_data = self.get_cleaned_data_for_step("legal_parent_data")
+        if 'age' in legal_parent_data:
+            del legal_parent_data['age']
+
+        relative_data = self.get_cleaned_data_for_step("relative_data")        
+        if 'age' in relative_data:
+            del relative_data['age']
+
+        emergency_contacts_data_list = self.get_cleaned_data_for_step("emergency_contact") # emergency_contacts es una lista de diccionarios si el formset es válido
+
+        # 4. Intentar crear los objetos dentro de un único bloque try-except para manejar la dependencia.
         student_instance = None 
         
         try:
-            #5. Crear la instancia del estudiante
+            # 5. Crear los familiares
+            legal_parent_instance = StudentRelative.objects.create(**legal_parent_data)
+            relative_instance = StudentRelative.objects.create(**relative_data)
+
+            # 5.1 Asignar las instancias de familiares a los datos del estudiante
+            # Estos campos son ForeignKey, por lo que necesitan la instancia del objeto, no solo el ID
+            student_data['id_legal_parent'] = legal_parent_instance
+            student_data['id_relative'] = relative_instance
+
+            #6. Crear la instancia del estudiante
             student_instance = Student.objects.create(**student_data)
 
-            #6. Crear la instancia de DetailAcademicInscription SY Y SOLO SI el Student fue creado con éxito
+            #7. Crear la instancia de DetailAcademicInscription 
             if detail_inscription_data:
                 DetailAcademicInscription.objects.create(id_student=student_instance, **detail_inscription_data)
                 
-                # 6.1 Crear cada contacto de emergencia asociado al estudiante
+                # 7.1 Crear cada contacto de emergencia asociado al estudiante
                 if emergency_contacts_data_list: # Confirmar que hay data
                     for contact_data in emergency_contacts_data_list:
-                        # Only create if the form data is not empty (e.g., all fields were filled)
-                        # This check is important if you allow less than 3 forms to be submitted (e.g., extra=3, min_num=0)
-                        # With min_num=3, all 3 forms are expected to have data if valid.
-                        if any(contact_data.values()): # Check if any value in the dict is not empty/None
+                        if any(contact_data.values()): # Corroborar que ningún valor está vacío
                             EmergencyContact.objects.create(id_student=student_instance, **contact_data)
 
-        # Este bloque captura errores tanto de la creación del estudiante como de la inscripción.        
+        # 8. Este bloque captura errores de la creación del estudiante, de la inscripción y/o los familiares       
         except Exception as e:
             
-            print(f"Error during student or inscription creation: {e}")
+            print(f"Error during student, inscription or relatives creation: {e}")
             import traceback
             traceback.print_exc() # Para depuración detallada
 
@@ -136,7 +151,7 @@ class StudentWizard(SessionWizardView):
         # Opcional: limpiar los datos del wizard de la sesión/cookies
         self.storage.reset()        
 
-        # 7. Redirigir a una página de éxito
+        # 9. Redirigir a una página de éxito
         return redirect(reverse('students:list'))
 
 @login_required

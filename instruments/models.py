@@ -2,8 +2,20 @@ from django.db import models
 
 # Create your models here.
 class Instrument(models.Model):
-    code = models.CharField(max_length=10)
+
+    CATEGORY_CHOICES = [
+        ('Wind',       'Viento'),
+        ('String',     'Cuerdas'),
+        ('Percussion', 'Percusión'),
+        ('Other',      'Otros'),
+    ]
+
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+    )
+
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.code + ' - ' + self.name
+        return f"{self.name} ({self.get_category_display()})"
