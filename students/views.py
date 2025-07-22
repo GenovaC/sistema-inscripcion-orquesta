@@ -204,6 +204,10 @@ def list(request):
 @login_required
 def detail(request, id):
     student = get_object_or_404(Student, id=id)
+    legal_parent = student.id_legal_parent  # Esto es una instancia de StudentRelative
+    relative = student.id_relative          # También es una instancia de StudentRelative
+    inscriptions = DetailAcademicInscription.objects.filter(id_student=student)
+    emergency_contacts = EmergencyContact.objects.filter(id_student=student)
 
     # Calcular la edad
     today = date.today()
@@ -212,4 +216,10 @@ def detail(request, id):
     
     student.calculated_age = age
 
-    return render(request, 'students/student_detail.html', {'student': student}) 
+    return render(request, 'students/student_detail.html', {
+        'student':            student,
+        'legal_parent':       legal_parent,
+        'relative':           relative,
+        'inscriptions':       inscriptions,
+        'emergency_contacts': emergency_contacts
+    }) 

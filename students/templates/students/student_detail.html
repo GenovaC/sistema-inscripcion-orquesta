@@ -50,10 +50,14 @@
                 Datos Personales
             </button>
             <button id="tab-academic-socio" class="tab-button" role="tab" aria-controls="panel-academic-socio" aria-selected="false" onclick="showTab('academic-socio')">
-                Datos Académicos y Socioeconómicos
+                Datos Adicionales
             </button>
             <button id="tab-family" class="tab-button" role="tab" aria-controls="panel-family" aria-selected="false" onclick="showTab('family')">
                 Datos de Representantes
+            </button>
+            
+            <button id="tab-contact" class="tab-button" role="tab" aria-controls="panel-contact" aria-selected="false" onclick="showTab('contact')">
+                Contactos de Emergencia
             </button>
             {# Puedes añadir más pestañas aquí si es necesario #}
         </div>
@@ -204,30 +208,30 @@
                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Nombre completo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.fullname_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.fullname }}</p>
                     </div>
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Parentesco:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.lastnames }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.relationship }}</p>
                     </div>                    
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Estado Civil:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.get_marital_status_legal_parent_display }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.get_marital_status_display }}</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.nationality_id_legal_parent }} - {{ student.document_id_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.nationality }} - {{ legal_parent.document_id }}</p>
                     </div>
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.born_date_legal_parent|date:"d/m/Y" }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.born_date|date:"d/m/Y" }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.age_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">no calculada</p>
                     </div>
                 </div>
 
@@ -235,8 +239,8 @@
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
                         <p class="mt-1 text-sm text-gray-700">
-                            {% if student.home_phone_legal_parent %}
-                                {{ student.home_phone_legal_parent }}
+                            {% if legal_parent.home_phone %}
+                                {{ legal_parent.home_phone }}
                             {% else %}
                                 Mismo del beneficiario.
                             {% endif %}
@@ -244,11 +248,11 @@
                     </div>
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.cellphone_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.cellphone }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Correo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.email_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.email }}</p>
                     </div>
                 </div>
 
@@ -256,8 +260,8 @@
                     <div class="sm:col-span-full">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Dirección de Habitación:</p>
                         <p class="mt-1 text-sm text-gray-700">
-                            {% if student.address_legal_parent %}
-                                {{ student.address_legal_parent }}
+                            {% if legal_parent.address %}
+                                {{ legal_parent.address }}
                             {% else %}
                                 Misma del beneficiario.
                             {% endif %}
@@ -268,19 +272,19 @@
                  <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Profesión u Oficio:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.profession_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.profession }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Lugar de Trabajo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.workplace_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.workplace }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Cargo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.job_title_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.job_title }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Oficina:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.office_phone_legal_parent }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ legal_parent.office_phone }}</p>
                     </div>
                 </div>
 
@@ -295,30 +299,30 @@
                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Nombre completo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.fullname_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.fullname }}</p>
                     </div>
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Parentesco:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.relationship_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.relationship }}</p>
                     </div>                    
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Estado Civil:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.get_marital_status_relative_display }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.get_marital_status_display }}</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Cédula de Identidad:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.nationality_id_relative }} - {{ student.document_id_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.nationality }} - {{ relative.document_id }}</p>
                     </div>
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Fecha de Nacimiento:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.born_date_relative|date:"d/m/Y" }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.born_date|date:"d/m/Y" }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Edad:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.age_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">no calculada</p>
                     </div>
                 </div>
 
@@ -326,8 +330,8 @@
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Casa:</p>
                         <p class="mt-1 text-sm text-gray-700">
-                            {% if student.home_phone_relative %}
-                                {{ student.home_phone_relative }}
+                            {% if relative.home_phone %}
+                                {{ relative.home_phone }}
                             {% else %}
                                 Mismo del beneficiario.
                             {% endif %}
@@ -335,7 +339,11 @@
                     </div>
                     <div class="sm:col-span-3">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono Celular:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.cellphone_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.cellphone }}</p>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <p class="block text-sm font-medium leading-6 text-gray-900">Correo:</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.email }}</p>
                     </div>
                 </div>
 
@@ -343,8 +351,8 @@
                     <div class="sm:col-span-full">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Dirección de Habitación:</p>
                         <p class="mt-1 text-sm text-gray-700">
-                            {% if student.address_relative %}
-                                {{ student.address_relative }}
+                            {% if relative.address %}
+                                {{ relative.address }}
                             {% else %}
                                 Misma del beneficiario.
                             {% endif %}
@@ -355,21 +363,49 @@
                  <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Profesión u Oficio:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.profession_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.profession }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Lugar de Trabajo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.workplace_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.workplace }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Cargo:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.job_title_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.job_title }}</p>
                     </div>
                     <div class="sm:col-span-2">
                         <p class="block text-sm font-medium leading-6 text-gray-900">Teléfono de Oficina:</p>
-                        <p class="mt-1 text-sm text-gray-700">{{ student.office_phone_relative }}</p>
+                        <p class="mt-1 text-sm text-gray-700">{{ relative.office_phone }}</p>
                     </div>
                 </div>
+
+            </div>
+        </div>
+
+        <div id="panel-contact" class="tab-content" role="tabpanel" aria-labelledby="tab-contact">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Contactos de Emergencia</h3>
+            <div class="space-y-6">
+                {% for contact in emergency_contacts %}
+
+                    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+                        <div class="sm:col-span-2">
+                            <p class="block text-sm font-medium leading-6 text-gray-900">Nombre de Contacto</p>
+                            <p class="mt-1 text-sm text-gray-700">{{ contact.fullname }}</p>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <p class="block text-sm font-medium leading-6 text-gray-900">Parentesco del Contacto</p>
+                            <p class="mt-1 text-sm text-gray-700">{{ contact.relationship }}</p>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <p class="block text-sm font-medium leading-6 text-gray-900">Número telefónico</p>
+                            <p class="mt-1 text-sm text-gray-700">{{ contact.cellphone }}</p>
+                        </div>
+
+                    </div>
+                
+                {% endfor %}                
+
             </div>
         </div>
 
