@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from formtools.wizard.views import SessionWizardView
 from .models import Student, EmergencyContact, StudentRelative
 from academic_period.models import DetailAcademicInscription, AcademicPeriod
@@ -30,19 +31,28 @@ TEMPLATES = {
 
 class StudentWizard(SessionWizardView):
 
-    # Esta función determina qué tenplate HTML se debe renderizar para el paso actual del formulario.
+    # Esta función determina qué template HTML se debe renderizar para el paso actual del formulario.
     def get_template_names(self):
         return [TEMPLATES[self.steps.current]]      
     
-     # --- MÉTODO PARA PASAR DATOS A LOS SELECTORES DEL INSCRIPTION_DATA_TEMPLATE ---
+    # Método para inyectar un atributo adicional/temporal a un step, para luego usarlo en el formulario
+    def get_form_kwargs(self, step=None):
+        kwargs = super().get_form_kwargs(step)
+
+        if step == 'relative_data':  
+            legal_parent_data = self.get_cleaned_data_for_step('legal_parent_data')
+            dni_legal_parent = legal_parent_data.get('document_id')
+            kwargs['document_id_legal_parent'] = dni_legal_parent
+        
+        return kwargs
+
+    # --- MÉTODO PARA PASAR DATOS A LOS SELECTORES DEL INSCRIPTION_DATA_TEMPLATE ---
     def get_form(self, step=None, data=None, files=None):
         form = super().get_form(step, data, files)
 
         # Si estamos en el paso de inscripción, ajustamos los querysets
         if step == 'inscription_data':
             # Ejemplos de filtros adicionales por si llegan a ser necesarios más adelante:
-            # form.fields['id_orchestral_project'].queryset = OrchestralProject.objects.filter(is_active=True)
-            # form.fields['id_instrument'].queryset = Instrument.objects.order_by('name')
             # form.fields['id_academic_period'].queryset = AcademicPeriod.objects.filter(is_current=True)
 
             # Actualmente solo se obtienen todos los objetos.
@@ -52,7 +62,7 @@ class StudentWizard(SessionWizardView):
 
         return form
     
-    # Proporciona datos adicionales al contexto de la plantilla que se está renderizando para el paso actual
+    # Método que proporciona datos adicionales al contexto de la plantilla que se está renderizando para el paso actual
     def get_context_data(self, form, **kwargs):
         context = super().get_context_data(form=form, **kwargs)         # Obtener contexto base de la clase padre
         context['wizard_title'] = "Inscribir nuevo estudiante"
@@ -66,7 +76,7 @@ class StudentWizard(SessionWizardView):
         }
         return context
     
-    # Esta función es solo para imprimir en consola lo que se va recopilando al pasar cada step
+    # Método para imprimir en consola lo que se va recopilando al pasar cada step. Solo es informativo.
     def render_next_step(self, form):
         # contiene todos los datos limpios de los pasos anteriores, también información sobre el paso actual y el siguiente.        
 
@@ -81,6 +91,7 @@ class StudentWizard(SessionWizardView):
         
         return super().render_next_step(form)
 
+    # Método para guardar el estudiante, se llama al completar todo el formulario wizard
     def done(self, form_list, **kwargs):
         # form_list es una lista de los formularios válidos de cada paso, no se usa porque hay 
         # formularios de distintas entidades por lo que se requiere un tratamiento distinto.
@@ -115,32 +126,58 @@ class StudentWizard(SessionWizardView):
         student_instance = None 
         
         try:
-            # 5. Crear los familiares
-            legal_parent_instance = StudentRelative.objects.create(**legal_parent_data)
-            relative_instance = StudentRelative.objects.create(**relative_data)
 
-            # 5.1 Asignar las instancias de familiares a los datos del estudiante
-            # Estos campos son ForeignKey, por lo que necesitan la instancia del objeto, no solo el ID
-            student_data['id_legal_parent'] = legal_parent_instance
-            student_data['id_relative'] = relative_instance
+            # Usar una transacción para asegurar la atomicidad de la operación.  
+            # Si ocurre un error en cualquier punto dentro de este bloque todas las operaciones de base de datos 
+            # realizadas dentro de la transacción se revertirán. O se guarda todo correctamente, o no se guarda nada.
+            with transaction.atomic():
 
-            #6. Crear la instancia del estudiante
-            student_instance = Student.objects.create(**student_data)
+                # 5. Crear los familiares
+                # Crear el representante legal o actualizar el registro por document_id si ya existe
+                legal_parent_instance, created_legal = StudentRelative.objects.update_or_create(
+                    document_id = legal_parent_data['document_id'],
+                    defaults = legal_parent_data
+                )
 
-            #7. Crear la instancia de DetailAcademicInscription 
-            if detail_inscription_data:
-                DetailAcademicInscription.objects.create(id_student=student_instance, **detail_inscription_data)
-                
-                # 7.1 Crear cada contacto de emergencia asociado al estudiante
-                if emergency_contacts_data_list: # Confirmar que hay data
-                    for contact_data in emergency_contacts_data_list:
-                        if any(contact_data.values()): # Corroborar que ningún valor está vacío
-                            EmergencyContact.objects.create(id_student=student_instance, **contact_data)
+                print(f"\n --------- Representante Legal {'creado' if created_legal else 'actualizado'}: {legal_parent_instance}")
 
-        # 8. Este bloque captura errores de la creación del estudiante, de la inscripción y/o los familiares       
+                # Crear el familiar o actualizar el registro por document_id si ya existe
+                relative_instance, created_relative = StudentRelative.objects.update_or_create(
+                    document_id = relative_data['document_id'],
+                    defaults = relative_data
+                )
+
+                print(f"\n --------- Familiar {'creado' if created_relative else 'actualizado'}: {relative_instance}")
+
+                # 5.1 Asignar las instancias de familiares a los datos del estudiante
+                student_data['id_legal_parent'] = legal_parent_instance
+                student_data['id_relative'] = relative_instance
+
+                #6. Crear la instancia del estudiante
+                student_instance = Student.objects.create(**student_data)
+                print(f"\n --------- Estudiante creado: {student_instance}")
+
+                #7. Crear la instancia de DetailAcademicInscription 
+                if detail_inscription_data:
+                    DetailAcademicInscription.objects.create(id_student=student_instance, **detail_inscription_data)
+                    
+                    # 7.1 Crear cada contacto de emergencia asociado al estudiante
+                    if emergency_contacts_data_list: 
+                        for contact_data in emergency_contacts_data_list:
+                             # Asegurar de que el diccionario no esté vacío antes de crear
+                            if any(contact_data.values()): 
+                                EmergencyContact.objects.create(id_student=student_instance, **contact_data)
+
+            # Opcional: limpiar los datos del wizard de la sesión/cookies
+            self.storage.reset()        
+
+            # 8. Redirigir a una página de éxito
+            return redirect(reverse('students:list'))
+        
+        # 9. Este bloque captura errores de la creación del estudiante, de la inscripción y/o los familiares       
         except Exception as e:
             
-            print(f"Error during student, inscription or relatives creation: {e}")
+            print(f"Error durante la creación del estudiante: {e}")
             import traceback
             traceback.print_exc() # Para depuración detallada
 
@@ -148,11 +185,7 @@ class StudentWizard(SessionWizardView):
             # se puede implementar más adelante una distinción en el mensaje de error.
             return render(self.request, 'students/error_saving_student.html', {'error': str(e), 'data': str(e)})
 
-        # Opcional: limpiar los datos del wizard de la sesión/cookies
-        self.storage.reset()        
-
-        # 9. Redirigir a una página de éxito
-        return redirect(reverse('students:list'))
+        
 
 @login_required
 def list(request):

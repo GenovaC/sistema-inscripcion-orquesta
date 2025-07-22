@@ -117,6 +117,7 @@ class PersonalDataForm(forms.ModelForm):
         }
 
      # Sobreescribir el constructor para calcular la edad al cargar el formulario
+   
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk and self.instance.born_date:
@@ -343,27 +344,65 @@ class LegalParentDataForm(forms.ModelForm):
             }),
         }
 
-     # Sobreescribir el constructor para calcular la edad al cargar el formulario
+     
     def __init__(self, *args, **kwargs):
+        # Obtener el valor del dni del representante legal cuando se está en el form del familiar secundario
+        self.document_id_legal_parent = kwargs.pop('document_id_legal_parent', None) # con 'pop' se elimina de los kwargs, para evitar errores más adelante
+
         super().__init__(*args, **kwargs)
+
+        # Para calcular la edad al cargar el formulario
         if self.instance and self.instance.pk and self.instance.born_date:
             today = timezone.now().date()
             age = today.year - self.instance.born_date.year - ((today.month, today.day) < (self.instance.born_date.month, self.instance.born_date.day))
             self.fields['age'].initial = age # Asigna la edad calculada al campo 'age'
 
+    def clean(self):
+        cleaned_data = super().clean()
+        document_id = cleaned_data.get('document_id')
+        born_date = cleaned_data.get('born_date')
+
+        if document_id and born_date:    
+            try:        
+                # Intenta encontrar un registro existente con el mismo document_id
+                existing_record = StudentRelative.objects.get(document_id=document_id)
+
+                # Regla: Si el born_date es diferente, no permitir el registro
+                if existing_record.born_date != born_date:
+                    raise forms.ValidationError('Esta cédula está registrada para una persona diferente')
+                
+            except StudentRelative.DoesNotExist:
+                # Si el document_id NO existe en la base de datos, no se hace nada.
+                # Es un nuevo registro, y el método done() del wizard se encargará de crearlo.
+                pass 
+            except StudentRelative.MultipleObjectsReturned:
+                # Esto ocurriría si hubiera más de un registro con el mismo document_id.
+                raise forms.ValidationError('Error interno: Múltiples registros encontrados para esta cédula.')
+        return cleaned_data
+
     def clean_document_id(self):
         document_id = self.cleaned_data.get('document_id')
         if not (7 <= len(document_id) <= 8):
             raise ValidationError('El ID del documento debe tener entre 7 y 8 caracteres.')
+        
+        # Esta condición se usa cuando está en el step de familiar secundario, 
+        # para comparar la cédula del familiar (step actual) con la del representante legal (step anterior)
+        if self.document_id_legal_parent:
+            if document_id == self.document_id_legal_parent:
+                raise forms.ValidationError("La cédula del familiar no puede ser la misma que la del representante legal.")
+
         return document_id
 
     def clean_born_date(self):
         born_date = self.cleaned_data.get('born_date')
         if born_date:
             today = timezone.now().date()
-            min_born_date = today - timezone.timedelta(days=18 * 365.25)
+            # Calcula la fecha de hace 18 años para verificar la mayoría de edad
+            min_born_date = today.replace(year=today.year - 18)
+            # Si el día y mes de nacimiento ya pasaron en el año actual, restar 18 años.
+            # Si aún no pasan, la persona aún no cumple los 18 en este año, así que se considera mayor al cumplir este año.
             if born_date > min_born_date:
-                raise ValidationError('El representante legal debe ser mayor de 18 años.')
+                 raise ValidationError('El representante legal debe ser mayor de 18 años.')
         return born_date
 
     def clean_home_phone(self):
@@ -378,7 +417,7 @@ class LegalParentDataForm(forms.ModelForm):
             raise ValidationError('El número de celular debe tener 11 dígitos.')
         return cellphone
 
-    def clean_office(self):
+    def clean_office_phone(self):
         office_phone = self.cleaned_data.get('office_phone')
         if office_phone and not re.fullmatch(r'^\d{11}$', office_phone):
             raise ValidationError('El número de celular debe tener 11 dígitos.')

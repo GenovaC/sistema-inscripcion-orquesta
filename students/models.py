@@ -48,7 +48,6 @@ class StudentRelative(models.Model):
     )
     document_id = models.CharField(
         max_length=8,
-        unique=True,  # Un representante legal puede tener varios representados
         null=True,
         help_text="Cédula o Pasaporte del representante legal.",
     )
@@ -112,15 +111,28 @@ class StudentRelative(models.Model):
         # Validación para born_date:
         if self.born_date: 
             today = timezone.now().date()
-            min_born_date = today - timezone.timedelta(days=18 * 365.25)  # Aproximación de 18 años
+            min_born_date = today.replace(year=today.year - 18)  # Aproximación de 18 años
             if self.born_date and self.born_date > min_born_date:
                 raise ValidationError({'born_date': 'El representante debe tener más de 18 años.'})
             
         # Validación para datos del representante legal
-
         if self.document_id: 
             if not (7 <= len(self.document_id) <= 8):
                 raise ValidationError({'document_id': 'El ID del documento debe tener entre 7 y 8 caracteres.'})
+            
+            # Lógica de validación de born_date vs document_id para registros existentes
+            if self.document_id and self.born_date:
+                # Excluye la instancia actual si ya existe (para actualizaciones)
+                queryset = StudentRelative.objects.filter(document_id=self.document_id)
+                if self.pk: # Si es una instancia existente
+                    queryset = queryset.exclude(pk=self.pk)
+
+                existing_record_with_same_id = queryset.first()
+
+                if existing_record_with_same_id and existing_record_with_same_id.born_date != self.born_date:
+                    raise ValidationError({
+                        'document_id': 'Esta cédula está registrada para una persona diferente.'
+                    })
 
         if self.home_phone: # Check if the field has a value before applying regex
             if self.home_phone and not re.fullmatch(r'^\d{11}$', self.home_phone):
