@@ -48,7 +48,7 @@
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Proyecto</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad de Alumnos inscritos</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad de Alumnos Activos en el año escolar en curso</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opciones</th>
                 </tr>
             </thead>
@@ -57,7 +57,7 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{p.code}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{p.name}}</td>
-                        <td class="px-6 py-4 whitespace-nowrap stext-sm text-gray-900">100</td>
+                        <td class="px-6 py-4 whitespace-nowrap stext-sm text-gray-900">{{ p.inscripciones_activas }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">[Ver], [Editar], [Eliminar] </td>
                     </tr>
                 {% endfor %}
