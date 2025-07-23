@@ -5,6 +5,7 @@ from django.utils import timezone
 class AcademicPeriod(models.Model):
     first_year = models.PositiveIntegerField()
     final_year = models.PositiveIntegerField()
+    is_active  = models.BooleanField(default=False)
 
     def clean(self):
         if self.final_year != self.first_year + 1:
@@ -17,6 +18,12 @@ class AcademicPeriod(models.Model):
         verbose_name = "Período Académico"
         verbose_name_plural = "Períodos Académicos"
         ordering = ["-first_year"]
+
+    def clean(self):
+        if self.is_active:
+            active_exists = AcademicPeriod.objects.filter(is_active=True).exclude(pk=self.pk).exists()
+            if active_exists:
+                raise ValidationError("Ya existe un Período Escolar activo. Solo uno puede estar activo a la vez.")
 
 
 class DetailAcademicInscription(models.Model):
