@@ -9,7 +9,7 @@ from instruments.models import Instrument
 from orchestral_projects.models import OrchestralProject
 from .forms import PersonalDataForm, AcademicSocioeconomicDataForm, LegalParentDataForm, EmergencyContactForm, EmergencyContactFormSet 
 from academic_period.forms import DetailAcademicInscriptionForm
-from datetime import date
+from .utils import calculate_age
 
 FORMS = [
     ("personal_data", PersonalDataForm),
@@ -209,12 +209,10 @@ def detail(request, id):
     inscriptions = DetailAcademicInscription.objects.filter(id_student=student)
     emergency_contacts = EmergencyContact.objects.filter(id_student=student)
 
-    # Calcular la edad
-    today = date.today()
-    born = student.born_date
-    age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
-    
-    student.calculated_age = age
+    # Calcular las edades
+    student.calculated_age = calculate_age(student.born_date)
+    legal_parent.calculated_age = calculate_age(legal_parent.born_date)
+    relative.calculated_age = calculate_age(relative.born_date)
 
     return render(request, 'students/student_detail.html', {
         'student':            student,
