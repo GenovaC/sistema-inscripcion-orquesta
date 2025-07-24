@@ -64,6 +64,7 @@ class StudentRelative(models.Model):
     )
     address= models.TextField(
         max_length=300,
+        blank=True,  
         null=True,
         help_text="Dirección de Habitación (Solo si es diferente a la del Beneficiario)."
     )
@@ -85,6 +86,7 @@ class StudentRelative(models.Model):
     )
     workplace = models.CharField(
         max_length=40,
+        blank=True,  
         null=True,
         help_text="Lugar de trabajo del representante legal."
     )
