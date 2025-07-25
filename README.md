@@ -35,7 +35,7 @@ Posteriormente crear superusuario para acceder al panel administrativo de django
 
 `python manage.py createsuperuser`
 
-### 7. Ejecutar seeders
+### 8. Ejecutar seeders
 
 `python manage.py seed_instruments `
 
