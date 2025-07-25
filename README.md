@@ -35,7 +35,16 @@ Posteriormente crear superusuario para acceder al panel administrativo de django
 
 `python manage.py createsuperuser`
 
-### 8. Ejecutar el proyecto
+### 7. Ejecutar seeders
+
+`python manage.py seed_instruments `
+
+`python manage.py seed_academic_periods`
+
+`python manage.py seed_projects`
+
+
+### 9. Ejecutar el proyecto
 
 - Terminal 1 (para Tailwind CSS en modo "watch"):
 
@@ -49,6 +58,6 @@ Compilará automáticamente el CSS de Tailwind al hacer cambios en las plantilla
 
 Ambas deben ejecutarse con el entorno virtual activo, desde el directorio raíz del proyecto.
 
-### 9. Abrir el Login
+### 10. Abrir el Login
 
 Acceder a `http://127.0.0.1:8000/accounts/login/` e iniciar sesión con el superusuario creado.
