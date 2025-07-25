@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Orquesta Inicial A",
+    "code": "INICIAL-001"
+  },{
+    "name": "Orquesta Inicial B",
+    "code": "INICIAL-002"
+  },{
+    "name": "Orquesta Sinfónica Infantil",
+    "code": "INFANTIL-001"
+  },{
+    "name": "Orquesta Sinfónica Juvenil",
+    "code": "JUVENIL-001"
+  },{
+    "name": "Orquesta Sinfónica Regional Juvenil Manuel Carlos Piar",
+    "code": "REGIONAL-001"
+  },{
+    "name": "Orquesta Sinfónica Alma Llanera",
+    "code": "ALMA-LLANERA"
+  },{
+    "name": "Ensamble de Percusión",
+    "code": "ENSAMBLE-001"
+  }
+]

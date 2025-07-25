@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'academic_period',
     'tailwind',
     'theme', # Esta app es de Tailwind
-    'formtools'
+    'formtools',
+    'django_seed'
    # 'django_browser_reload' # Recomendado para recarga automática
 ]
 

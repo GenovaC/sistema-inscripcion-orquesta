@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Violín",
+    "category": "String"
+  },
+  {
+    "name": "Viola",
+    "category": "String"
+  },
+  {
+    "name": "Violoncello",
+    "category": "String"
+  },
+  {
+    "name": "Contrabajo",
+    "category": "String"
+  },
+  {
+    "name": "Mandolina",
+    "category": "String"
+  },
+  {
+    "name": "Cuatro",
+    "category": "String"
+  },
+  {
+    "name": "Guitarra",
+    "category": "String"
+  },
+  {
+    "name": "Arpa",
+    "category": "Other"
+  },
+  {
+    "name": "Percusión",
+    "category": "Percussion"
+  },
+  {
+    "name": "Piano",
+    "category": "Percussion"
+  },
+  {
+    "name": "Flauta",
+    "category": "Wind"
+  },
+  {
+    "name": "Oboe",
+    "category": "Wind"
+  },
+  {
+    "name": "Clarinete",
+    "category": "Wind"
+  },
+  {
+    "name": "Fagot",
+    "category": "Wind"
+  },
+  {
+    "name": "Trompeta",
+    "category": "Wind"
+  },
+  {
+    "name": "Corno Francés",
+    "category": "Wind"
+  },
+  {
+    "name": "Tuba",
+    "category": "Wind"
+  },
+  {
+    "name": "Trombón",
+    "category": "Wind"
+  },
+  {
+    "name": "Coro",
+    "category": "Other"
+  },
+  {
+    "name": "Flauta Dulce",
+    "category": "Wind"
+  }
+]
