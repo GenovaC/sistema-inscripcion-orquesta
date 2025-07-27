@@ -328,7 +328,13 @@ class Student(models.Model):
         if self.cellphone: # Check if the field has a value before applying regex
             if self.cellphone and not re.fullmatch(r'^\d{11}$', self.cellphone):
                 raise ValidationError({'cellphone': 'El número de celular debe ser una cadena de 11 dígitos numéricos.'})
-            
+
+        # Validación para id_legal_parent y id_relative (desde backend, pero también se maneja desde el formulario)
+        if self.id_legal_parent and self.id_relative:
+            if self.id_legal_parent == self.id_relative:
+                raise ValidationError(
+                    {'id_relative': 'El representante legal y el pariente no pueden ser la misma persona.'}
+                )    
             
     def __str__(self):
         return f"{self.names} {self.lastnames} ({self.document_id})"

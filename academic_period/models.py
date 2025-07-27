@@ -46,7 +46,7 @@ class DetailAcademicInscription(models.Model):
         verbose_name_plural = "Detalles de Inscripción Académica"
         #unique_together es porque un estudiante no puede estar inscrito 2 veces en el mismo período académico 
         unique_together = ('id_student', 'id_academic_period')
-        ordering = ['-inscription_date']
+        ordering = ['id_academic_period']
 
     def clean(self):
         super().clean()

@@ -35,6 +35,106 @@
         .tab-content.active {
             display: block; /* Muestra el contenido activo */
         }
+
+        /* --- Estilos para la línea de tiempo --- */
+        .timeline-container {
+            position: relative;
+            padding: 2rem 0; /* Ajusta el relleno vertical si es necesario */
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%; /* Centra la línea */
+            transform: translateX(-50%); /* Ajusta para centrar perfectamente */
+            top: 0;
+            bottom: 0;
+            width: 2px; /* Grosor de la línea */
+            background-color: #ffffff; /* gray-300 */
+            z-index: 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Para separar contenido izquierdo y derecho */
+            margin-bottom: 2rem; /* Espacio entre cada ítem */
+            position: relative; /* Para posicionar el círculo y la línea de conexión */
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0; /* No hay margen inferior para el último ítem */
+        }
+
+        .timeline-content-left,
+        .timeline-content-right {
+            width: calc(50% - 30px); /* Ancho para el contenido a cada lado, restando espacio para el conector central */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            
+        }
+
+        .timeline-content-left {
+            text-align: right; /* Alinea el texto a la derecha en los bloques izquierdos */
+        }
+
+        .timeline-dot-wrapper {
+            position: relative; /* Para posicionar la bolita en el centro */
+            width: 60px; /* Ancho para el conector y la bolita central */
+            flex-shrink: 0; /* Evita que se encoja */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1; /* Asegura que esté sobre la línea */
+        }
+
+        .timeline-dot {
+            width: 40px; /* Tamaño del círculo */
+            height: 40px;
+            border-radius: 9999px; /* rounded-full */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem; /* text-xl */
+            position: relative;
+            z-index: 2; /* Asegura que el ícono esté sobre el círculo */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow */
+        }
+
+        .timeline-connector {
+            position: absolute;
+            width: calc(50% - 20px); /* Ancho de la línea de conexión a cada lado del círculo */
+            height: 2px;
+            background-color: #ffffff; /* gray-300 */
+            z-index: 1;
+        }
+
+        .timeline-connector.left {
+            right: 50%;
+            margin-right: 20px; /* Espacio entre el conector y el círculo */
+        }
+
+        .timeline-connector.right {
+            left: 50%;
+            margin-left: 20px; /* Espacio entre el conector y el círculo */
+        }
+
+        /* Estilos para los textos */
+        .timeline-title {
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 0.25rem; /* mb-1 */
+            font-size: 1.125rem; /* text-lg */
+        }
+        .timeline-subtitle {
+            font-size: 0.875rem; /* text-sm */
+            color: #323944; /* gray-700 */
+        }
+        .timeline-year {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* gray-900 */
+        }
     </style>
 {% endblock %}
 
@@ -58,6 +158,10 @@
             
             <button id="tab-contact" class="tab-button" role="tab" aria-controls="panel-contact" aria-selected="false" onclick="showTab('contact')">
                 Contactos de Emergencia
+            </button>
+
+            <button id="tab-history" class="tab-button" role="tab" aria-controls="panel-history" aria-selected="false" onclick="showTab('history')">
+                Historial Académico
             </button>
             {# Puedes añadir más pestañas aquí si es necesario #}
         </div>
@@ -409,7 +513,64 @@
             </div>
         </div>
 
-    </div>
+        <div id="panel-history" class="tab-content" role="tabpanel" aria-labelledby="tab-history">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6 text-center">Historial Académico en la Institución</h3>
+            
+            <div class="timeline-container">
+                <div class="timeline-line"></div> {# La línea vertical central #}
+
+                {% for inscription in inscriptions %}
+                    {# Determinar si es un elemento izquierdo o derecho para alternar #}
+                    {% cycle 'left' 'right' as alignment silent %}
+
+                    <div class="timeline-item">
+                        {% if alignment == 'left' %}
+                            {# Contenido de la izquierda (el año en este caso) #}
+                            <div class="timeline-content-left">
+                                <p class="timeline-year">{{ inscription.id_academic_period }}</p> 
+                            </div>
+                            
+                            <div class="timeline-dot-wrapper">
+                                <div class="timeline-connector left"></div> {# Conector a la izquierda del círculo #}
+                                <div class="timeline-dot bg-orange-700">
+                                    <i class="fas fa-music"></i> 
+                                </div>
+                                <div class="timeline-connector right"></div> {# Conector a la derecha del círculo #}
+                            </div>
+
+                            {# Contenido de la derecha (Cátedra y Proyecto Orquestal) #}
+                            <div class="timeline-content-right">
+                                <p class="timeline-title text-orange-700">{{ inscription.id_instrument }}</p> 
+                                <p class="timeline-subtitle">{{ inscription.id_orchestral_project.name }}</p>
+                                <p class="timeline-subtitle">Tipo: {{ inscription.get_type_display }} </p>
+                            </div>
+                        {% else %}
+                            {# Contenido de la izquierda (Cátedra y Proyecto Orquestal) #}
+                            <div class="timeline-content-left">
+                                <p class="timeline-title text-pink-700">{{ inscription.id_instrument }}</p>
+                                <p class="timeline-subtitle">{{ inscription.id_orchestral_project.name }}</p>
+                                <p class="timeline-subtitle">Tipo: {{ inscription.get_type_display }} </p>
+                            </div>
+
+                            <div class="timeline-dot-wrapper">
+                                <div class="timeline-connector left"></div> 
+                                <div class="timeline-dot bg-pink-700">
+                                    <i class="fas fa-music"></i> 
+                                </div>
+                                <div class="timeline-connector right"></div> 
+                            </div>
+
+                            {# Contenido de la derecha (el año en este caso) #}
+                            <div class="timeline-content-right">
+                                <p class="timeline-year">{{ inscription.id_academic_period }}</p> 
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-gray-600 italic text-center">No hay historial académico disponible para este estudiante.</p>
+                {% endfor %}
+            </div>
+        </div>
 {% endblock %}
 
 {% block extra_js %}
