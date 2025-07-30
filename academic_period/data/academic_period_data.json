@@ -1,5 +1,9 @@
 [
   {
+    "first_year": 2022,
+    "final_year": 2023,
+    "is_active": "False"
+  },{
     "first_year": 2023,
     "final_year": 2024,
     "is_active": "False"

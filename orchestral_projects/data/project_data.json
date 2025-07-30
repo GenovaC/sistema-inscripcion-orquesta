@@ -1,24 +1,51 @@
 [
   {
-    "name": "Orquesta Inicial A",
-    "code": "INICIAL-001"
+    "name": "Iniciación Musical A",
+    "code": "INICIACIÓN-A"
   },{
-    "name": "Orquesta Inicial B",
-    "code": "INICIAL-002"
+    "name": "Iniciación Musical B",
+    "code": "INICIACIÓN-B"
   },{
-    "name": "Orquesta Sinfónica Infantil",
-    "code": "INFANTIL-001"
+    "name": "Iniciación Musical B1",
+    "code": "INICIACIÓN-B1"
   },{
-    "name": "Orquesta Sinfónica Juvenil",
-    "code": "JUVENIL-001"
+    "name": "Iniciación Musical C",
+    "code": "INICIACIÓN-C"
   },{
-    "name": "Orquesta Sinfónica Regional Juvenil Manuel Carlos Piar",
-    "code": "REGIONAL-001"
+    "name": "Iniciación Musical C1",
+    "code": "INICIACIÓN-C1"
   },{
-    "name": "Orquesta Sinfónica Alma Llanera",
-    "code": "ALMA-LLANERA"
+    "name": "Iniciación Musical C2",
+    "code": "INICIACIÓN-C2"
   },{
-    "name": "Ensamble de Percusión",
-    "code": "ENSAMBLE-001"
+    "name": "Orquesta Alma Llanera Infantil",
+    "code": "ALMA-LLANERA-INFANTIL"
+  },{
+    "name": "Orquesta Alma Llanera Juvenil Inicial",
+    "code": "ALMA-LLANERA-INICIAL"
+  },{
+    "name": "Orquesta Alma Llanera Juvenil Medio",
+    "code": "ALMA-LLANERA-MEDIO"
+  },{
+    "name": "Orquesta Alma Llanera Juvenil Avanzado",
+    "code": "ALMA-LLANERA-AVANZADO"
+  },{
+    "name": "Orquesta Flautas Dulces",
+    "code": "FLAUTA-DULCE"
+  },{
+    "name": "Orquesta Preinfantil",
+    "code": "PREINFANTIL"
+  },{
+    "name": "Orquesta Preinfantil inicial",
+    "code": "PREINFANTIL-INICIAL"
+  },{
+    "name": "Orquesta Juvenil",
+    "code": "JUVENIL"
+  },{
+    "name": "Orquesta Regional Juvenil Manuel Carlos Piar",
+    "code": "REGIONAL"
+  },{
+    "name": "Cupo congelado",
+    "code": "CONGELADO"
   }
 ]

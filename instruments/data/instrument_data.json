@@ -20,7 +20,15 @@
     "category": "String"
   },
   {
-    "name": "Cuatro",
+    "name": "Bandola",
+    "category": "String"
+  },
+  {
+    "name": "Bajo Eléctrico",
+    "category": "String"
+  },
+  {
+    "name": "Cuatro Venezolano",
     "category": "String"
   },
   {
@@ -40,7 +48,7 @@
     "category": "Percussion"
   },
   {
-    "name": "Flauta",
+    "name": "Flauta transversa",
     "category": "Wind"
   },
   {
@@ -69,6 +77,10 @@
   },
   {
     "name": "Trombón",
+    "category": "Wind"
+  },
+  {
+    "name": "Bombardino",
     "category": "Wind"
   },
   {
