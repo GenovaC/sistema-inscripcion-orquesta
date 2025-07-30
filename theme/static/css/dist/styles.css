@@ -15,6 +15,7 @@
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-red-800: oklch(44.4% 0.177 26.899);
     --color-orange-400: oklch(75% 0.183 55.934);
+    --color-orange-700: oklch(55.3% 0.195 38.402);
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-800: oklch(44.8% 0.119 151.328);
     --color-cyan-300: oklch(86.5% 0.127 207.078);
@@ -438,11 +439,6 @@
   .gap-x-6 {
     column-gap: calc(var(--spacing) * 6);
   }
-  :where(.space-x-1 > :not(:last-child)) {
-    --tw-space-x-reverse: 0;
-    margin-inline-start: calc(calc(var(--spacing) * 1) * var(--tw-space-x-reverse));
-    margin-inline-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-x-reverse)));
-  }
   :where(.space-x-4 > :not(:last-child)) {
     --tw-space-x-reverse: 0;
     margin-inline-start: calc(calc(var(--spacing) * 4) * var(--tw-space-x-reverse));
@@ -470,13 +466,8 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
-<<<<<<< HEAD
   .rounded-full {
     border-radius: calc(infinity * 1px);
-=======
-  .rounded {
-    border-radius: 0.25rem;
->>>>>>> origin/devHenry
   }
   .rounded-lg {
     border-radius: var(--radius-lg);
@@ -498,9 +489,6 @@
   }
   .border-gray-300 {
     border-color: var(--color-gray-300);
-  }
-  .bg-blue-500 {
-    background-color: var(--color-blue-500);
   }
   .bg-gray-50 {
     background-color: var(--color-gray-50);
@@ -524,6 +512,9 @@
   }
   .bg-pink-700 {
     background-color: var(--color-pink-700);
+  }
+  .bg-pink-800 {
+    background-color: var(--color-pink-800);
   }
   .bg-pink-900 {
     background-color: var(--color-pink-900);
@@ -861,14 +852,6 @@
     }
   }
   @media (hover: hover) {
-<<<<<<< HEAD
-=======
-    .hover\:bg-gray-300:hover {
-      background-color: var(--color-gray-300);
-    }
-  }
-  @media (hover: hover) {
->>>>>>> origin/devHenry
     .hover\:bg-pink-600:hover {
       background-color: var(--color-pink-600);
     }
