@@ -53,7 +53,7 @@
                 </tr>
             </thead>
             <tbody class="bg-white/60 divide-y divide-gray-200"> {# Y el tbody un poco menos opaco #}
-                {% for i in instruments %}
+                {% for i in instruments.object_list %}
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{i.get_category_display}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{i.name}}</td>
@@ -63,10 +63,16 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="flex justify-center mt-4">
-            <a href="#" class="text-gray-500 hover:text-pink-600 text-3xl">
-                <i class="fas fa-chevron-circle-down"></i>
-            </a>
+        <div class="pagination">
+            {% if instruments.has_previous %}
+                <a href="?page={{ instruments.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span>Página {{ instruments.number }} de {{ instruments.paginator.num_pages }}</span>
+
+            {% if instruments.has_next %}
+                <a href="?page={{ instruments.next_page_number }}">Siguiente</a>
+            {% endif %}
         </div>
     </div>
 

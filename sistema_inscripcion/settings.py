@@ -54,7 +54,8 @@ LOGIN_REDIRECT_URL = '/dashboard/'  # o a donde quieras llevar al usuario tras e
 
 TAILWIND_APP_NAME = 'theme'
 
-NPM_BIN_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
+# NPM_BIN_PATH = 'C:\\Program Files\\nodejs\\npm.cmd'
+NPM_BIN_PATH = "/home/henry/.nvm/versions/node/v24.1.0/bin/npm"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,7 +73,7 @@ ROOT_URLCONF = 'sistema_inscripcion.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "sistema_inscripcion" / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
