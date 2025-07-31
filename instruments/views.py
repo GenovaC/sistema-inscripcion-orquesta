@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+
+from academic_period.models import DetailAcademicInscription
 from .forms import InstrumentForm
 from .models import Instrument
 from django.db.models import Count, Q
@@ -34,3 +36,18 @@ def list(request):
                 'error': 'Ha habido un error al registrar la nueva cátedra.'
             }) 
 
+
+@login_required
+def detail(request, id):
+    instrument = get_object_or_404(Instrument, id=id)    
+    inscriptions = DetailAcademicInscription.objects.filter(
+            id_instrument=instrument, 
+            id_academic_period__is_active=True
+        )
+    period_active = inscriptions.first().id_academic_period
+
+    return render(request, 'instruments/instrument_detail.html', {
+        'instrument': instrument,
+        'inscriptions': inscriptions,
+        'academic_period': period_active
+    }) 
