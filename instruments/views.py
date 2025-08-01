@@ -1,12 +1,11 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
 from academic_period.models import DetailAcademicInscription
 from .forms import InstrumentForm
 from .models import Instrument
 from django.db.models import Count, Q
-  
+from sistema_inscripcion.utils import paginate  
 
 @login_required
 def list(request):
@@ -24,7 +23,7 @@ def list(request):
     if request.method == 'GET':
         return render(request, 'instruments/instruments_list.html', {
             'form': InstrumentForm,
-            'instruments': instruments
+            'instruments': paginated_instruments
         }) 
     else:
         try:

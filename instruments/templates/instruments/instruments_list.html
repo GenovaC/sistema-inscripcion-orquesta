@@ -53,7 +53,7 @@
                 </tr>
             </thead>
             <tbody class="bg-white/60 divide-y divide-gray-200"> {# Y el tbody un poco menos opaco #}
-                {% for i in instruments %}
+                {% for i in instruments.object_list %}
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{i.get_category_display}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{i.name}}</td>
