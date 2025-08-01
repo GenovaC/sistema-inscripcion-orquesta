@@ -18,7 +18,9 @@ def list(request):
             filter=Q(detailacademicinscription__id_academic_period__is_active=True)
         )
     )
-    
+
+    paginated_instruments = paginate(request, instruments, per_page=3)
+        
     if request.method == 'GET':
         return render(request, 'instruments/instruments_list.html', {
             'form': InstrumentForm,

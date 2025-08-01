@@ -72,7 +72,7 @@ ROOT_URLCONF = 'sistema_inscripcion.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'sistema_inscripcion' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
