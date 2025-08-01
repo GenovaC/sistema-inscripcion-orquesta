@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from academic_period.models import DetailAcademicInscription
+from academic_period.models import AcademicPeriod, DetailAcademicInscription
 from .forms import InstrumentForm
 from .models import Instrument
 from django.db.models import Count, Q
@@ -45,7 +45,8 @@ def detail(request, id):
             id_instrument=instrument, 
             id_academic_period__is_active=True
         )
-    period_active = inscriptions.first().id_academic_period
+    
+    period_active = AcademicPeriod.objects.filter(is_active=True).first()
 
     return render(request, 'instruments/instrument_detail.html', {
         'instrument': instrument,

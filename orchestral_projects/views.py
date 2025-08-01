@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+
+from academic_period.models import AcademicPeriod, DetailAcademicInscription
 from .forms import OrchestralProjectForm
 from .models import OrchestralProject
 from django.db.models import Count, Q
@@ -33,4 +35,21 @@ def list(request):
                 'form': OrchestralProjectForm,
                 'error': 'Ha habido un error al registrar el nuevo proyecto.'
             }) 
+        
+
+@login_required
+def detail(request, id):
+    orchestral_project = get_object_or_404(OrchestralProject, id=id)    
+    inscriptions = DetailAcademicInscription.objects.filter(
+            id_orchestral_project=orchestral_project, 
+            id_academic_period__is_active=True
+        )
+    
+    period_active = AcademicPeriod.objects.filter(is_active=True).first()
+
+    return render(request, 'orchestral_projects/orchestral_project_detail.html', {
+        'orchestral_project': orchestral_project,
+        'inscriptions': inscriptions,
+        'academic_period': period_active
+    }) 
 

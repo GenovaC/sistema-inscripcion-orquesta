@@ -58,7 +58,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{p.code}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{p.name}}</td>
                         <td class="px-6 py-4 whitespace-nowrap stext-sm text-gray-900">{{ p.inscripciones_activas }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">[Ver], [Editar], [Eliminar] </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <a href="{% url 'orchestral_projects:detail' p.id %}" class="text-blue-600 hover:text-blue-800" title="Ver detalle">
+                                <i class="fas fa-eye"></i>
+                            </a>  
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
