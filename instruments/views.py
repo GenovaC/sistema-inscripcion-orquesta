@@ -18,7 +18,7 @@ def list(request):
         )
     )
 
-    paginated_instruments = paginate(request, instruments, per_page=1)
+    paginated_instruments = paginate(request, instruments, per_page=3)
         
     if request.method == 'GET':
         return render(request, 'instruments/instruments_list.html', {

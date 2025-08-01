@@ -62,18 +62,9 @@
                     </tr>
                 {% endfor %}
             </tbody>
+
         </table>
-        <div class="pagination">
-            {% if instruments.has_previous %}
-                <a href="?page={{ instruments.previous_page_number }}">Anterior</a>
-            {% endif %}
-
-            <span>Página {{ instruments.number }} de {{ instruments.paginator.num_pages }}</span>
-
-            {% if instruments.has_next %}
-                <a href="?page={{ instruments.next_page_number }}">Siguiente</a>
-            {% endif %}
-        </div>
+        {% include "paginate.html" %}
     </div>
 
 {% endblock %}
